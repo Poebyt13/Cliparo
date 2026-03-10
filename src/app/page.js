@@ -11,6 +11,7 @@ import CallToActionSection from "@/components/CallToActionSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import SocialProof from "@/components/SocialProof";
 import ExplainInDays from "@/components/ExplainInDays";
+import VideoSection from "@/components/VideoSection";
 
 // import images from assets folder
 import avatar1 from "@/assets/image1.png";
@@ -216,7 +217,11 @@ export default function Home() {
           </div>
         </div>
       </section>
-
+      <VideoSection
+        title="Guarda il tutorial"
+        videoUrl="https://www.youtube.com/embed/dQw4w9WgXcQ"
+        message="Questo è il messaggio a sinistra che spiega il video..."
+      />
       {/* ── How It Works ── */}
       <section id="how-it-works" className="bg-base-200">
         <HowItWorksSection
