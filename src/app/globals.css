@@ -1,10 +1,127 @@
 @import "tailwindcss";
 
+/* ═══════════════════════════════════════════════════════════════
+   SISTEMA DI TEMI GLOBALE — SaaS Boilerplate
+   ─────────────────────────────────────────────────────────────
+   Per cambiare tema basta modificare data-theme su <html>:
+     <html data-theme="saas-light">   oppure
+     <html data-theme="saas-dark">
+
+   Tutti i token CSS di DaisyUI (colori, radius, font) vengono
+   sovrascritti automaticamente dal tema attivo.
+═══════════════════════════════════════════════════════════════ */
+
+/* ──────────────────────────────────────────────────────────────
+   Plugin DaisyUI — registra i temi disponibili.
+   Solo saas-light e saas-dark sono temi custom del progetto.
+   Gli altri (light, dark, corporate, business) sono i default
+   di DaisyUI mantenuti come fallback o opzione futura.
+────────────────────────────────────────────────────────────── */
 @plugin "daisyui" {
-  themes: light --default, dark --prefersdark;
+  themes: saas-light --default, saas-dark --prefersdark, light, dark, corporate, business;
   root: ":root";
   include: ;
   exclude: ;
   prefix: ;
-  logs: true;
+  logs: false;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   TEMA: saas-light  (default, color-scheme: light)
+   ──────────────────────────────────────────────────────────────
+   Formato colori: oklch(luminosità% croma angolo-hue)
+     luminosità: 0% = nero, 100% = bianco
+     croma:      0 = grigio, 0.37 = massima saturazione
+     hue:        0–360°  (264 = viola/blu, 300 = viola, 180 = teal)
+══════════════════════════════════════════════════════════════ */
+@plugin "daisyui/theme" {
+  name: "saas-light";
+  default: true;
+  color-scheme: light;
+
+  /* ── Colori brand ─────────────────────────────────────────── */
+  --color-primary:           oklch(58% 0.22 264);  /* viola-blu principale    */
+  --color-primary-content:   oklch(97% 0.02 264);  /* testo su primary        */
+  --color-secondary:         oklch(62% 0.18 300);  /* viola secondario        */
+  --color-secondary-content: oklch(97% 0.01 300);  /* testo su secondary      */
+  --color-accent:            oklch(70% 0.20 180);  /* teal/acqua come accento */
+  --color-accent-content:    oklch(16% 0.02 180);  /* testo su accent         */
+  --color-neutral:           oklch(32% 0.04 264);  /* grigio scuro neutro     */
+  --color-neutral-content:   oklch(94% 0.01 264);  /* testo su neutral        */
+
+  /* ── Sfondi e testo (scala di grigi caldi) ──────────────── */
+  --color-base-100:     oklch(100% 0 0);         /* sfondo principale: bianco */
+  --color-base-200:     oklch(96% 0.005 264);    /* sfondo card/sezioni       */
+  --color-base-300:     oklch(90% 0.010 264);    /* bordi, divisori           */
+  --color-base-content: oklch(20% 0.02 264);     /* testo principale          */
+
+  /* ── Colori semantici ───────────────────────────────────── */
+  --color-info:            oklch(68% 0.18 220);  /* azzurro info    */
+  --color-info-content:    oklch(16% 0.02 220);
+  --color-success:         oklch(62% 0.22 140);  /* verde successo  */
+  --color-success-content: oklch(16% 0.02 140);
+  --color-warning:         oklch(75% 0.22 60);   /* arancio warning */
+  --color-warning-content: oklch(16% 0.02 60);
+  --color-error:           oklch(58% 0.24 25);   /* rosso errore    */
+  --color-error-content:   oklch(97% 0.01 25);
+
+  /* ── Border radius — controlla l'arrotondamento globale ─── */
+  --radius-selector: 0.5rem;   /* select, dropdown        */
+  --radius-field:    0.375rem; /* input, textarea, badge  */
+  --radius-box:      0.75rem;  /* card, modal, alert      */
+
+  /* ── Border width ───────────────────────────────────────── */
+  --border: 1px;
+
+  /* ── Profondità shadow ──────────────────────────────────── */
+  --depth: 1;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   TEMA: saas-dark  (attivato da prefers-color-scheme: dark)
+   ──────────────────────────────────────────────────────────────
+   Stessa struttura del tema chiaro; luminosità invertita per
+   basi scure e colori brand leggermente più chiari.
+══════════════════════════════════════════════════════════════ */
+@plugin "daisyui/theme" {
+  name: "saas-dark";
+  prefersdark: true;
+  color-scheme: dark;
+
+  /* ── Colori brand ─────────────────────────────────────────── */
+  --color-primary:           oklch(65% 0.22 264);  /* viola-blu più chiaro su scuro */
+  --color-primary-content:   oklch(16% 0.03 264);
+  --color-secondary:         oklch(68% 0.18 300);
+  --color-secondary-content: oklch(16% 0.02 300);
+  --color-accent:            oklch(72% 0.20 180);
+  --color-accent-content:    oklch(16% 0.02 180);
+  --color-neutral:           oklch(45% 0.05 264);
+  --color-neutral-content:   oklch(94% 0.01 264);
+
+  /* ── Sfondi e testo ─────────────────────────────────────── */
+  --color-base-100:     oklch(18% 0.02 264);     /* sfondo principale: grigio scuro */
+  --color-base-200:     oklch(14% 0.02 264);     /* sfondo card/sezioni             */
+  --color-base-300:     oklch(10% 0.02 264);     /* bordi, divisori                 */
+  --color-base-content: oklch(92% 0.01 264);     /* testo principale: quasi bianco  */
+
+  /* ── Colori semantici ───────────────────────────────────── */
+  --color-info:            oklch(68% 0.18 220);
+  --color-info-content:    oklch(16% 0.02 220);
+  --color-success:         oklch(62% 0.22 140);
+  --color-success-content: oklch(16% 0.02 140);
+  --color-warning:         oklch(72% 0.20 60);
+  --color-warning-content: oklch(16% 0.02 60);
+  --color-error:           oklch(60% 0.24 25);
+  --color-error-content:   oklch(97% 0.01 25);
+
+  /* ── Border radius (coerente con saas-light) ─────────────── */
+  --radius-selector: 0.5rem;
+  --radius-field:    0.375rem;
+  --radius-box:      0.75rem;
+
+  /* ── Border width ───────────────────────────────────────── */
+  --border: 1px;
+
+  /* ── Profondità shadow (ridotta su scuro) ────────────────── */
+  --depth: 0;
 }
