@@ -101,10 +101,7 @@ export default function TestimonialsSection({ testimonials = [] }) {
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         <div className={gridClass}>
           {items.map((t, i) => (
-            <div
-              key={i}
-              className={`${itemClass} ${count > 1 && i < count - 1 && count === 3 ? "border-r border-base-300 last:border-0" : ""}`}
-            >
+            <div key={i} className={itemClass}>
               <TestimonialCard {...t} />
             </div>
           ))}

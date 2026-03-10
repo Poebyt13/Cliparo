@@ -56,7 +56,7 @@ export default function ExplainInDays({ steps = [] }) {
               </div>
 
               {/* Dot — z-10 per sovrapporsi alla linea assoluta */}
-              <div className="relative z-10 w-3.5 h-3.5 rounded-full bg-base-content flex-shrink-0" />
+              <div className="relative z-10 w-3.5 h-3.5 rounded-full bg-base-content shrink-0" />
 
               {/* Testo sotto il dot */}
               <div className="mt-5 text-center px-3">
