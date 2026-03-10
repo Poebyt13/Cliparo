@@ -2,72 +2,68 @@ import Card from "@/components/Card";
 import Button from "@/components/Button";
 
 /**
- * Dati dei piani di abbonamento.
- * Modificare qui per aggiornare titoli, prezzi e feature mostrate.
- */
-const PLANS = [
-  {
-    title: "Free",
-    price: "€0",
-    period: "per sempre",
-    description: "Per iniziare senza impegno.",
-    features: [
-      "1 progetto",
-      "Accesso base alle funzionalità",
-      "Supporto community",
-    ],
-    cta: { label: "Inizia gratis", href: "/auth/signin", variant: "secondary" },
-    highlighted: false,
-  },
-  {
-    title: "Pro",
-    price: "€19",
-    period: "al mese",
-    description: "Per professionisti e team in crescita.",
-    features: [
-      "Progetti illimitati",
-      "Accesso completo alle funzionalità",
-      "Supporto prioritario via email",
-      "Analisi avanzate",
-    ],
-    cta: { label: "Abbonati ora", href: "/api/stripe/checkout", variant: "primary" },
-    highlighted: true,
-  },
-  {
-    title: "Enterprise",
-    price: "Su misura",
-    period: "",
-    description: "Per grandi team con esigenze personalizzate.",
-    features: [
-      "Tutto il piano Pro",
-      "SLA garantito",
-      "Onboarding dedicato",
-      "Fatturazione personalizzata",
-    ],
-    cta: { label: "Contattaci", href: "mailto:hello@example.com", variant: "accent" },
-    highlighted: false,
-  },
-];
-
-/**
- * Sezione pricing con 3 piani affiancati su desktop, stacked su mobile.
+ * Sezione pricing con N piani affiancati su desktop, stacked su mobile.
  * Usa i componenti Card e Button riusabili.
+ *
+ * Props:
+ *  - title: string — titolo della sezione
+ *  - subtitle: string — sottotitolo descrittivo
+ *  - plans: { title, price, period, description, features, cta, highlighted }[]
+ *      - title: string — nome del piano (es. "Pro")
+ *      - price: string — prezzo (es. "€19")
+ *      - period: string — periodicità (es. "al mese")
+ *      - description: string — breve descrizione
+ *      - features: string[] — lista feature
+ *      - cta: { label, href, variant } — bottone CTA
+ *      - highlighted: boolean — evidenzia con bordo primary
  */
-export default function PricingSection() {
+export default function PricingSection({
+  title = "Scegli il piano giusto",
+  subtitle = "Nessuna sorpresa. Cancella quando vuoi.",
+  plans = [
+    {
+      title: "Free",
+      price: "€0",
+      period: "per sempre",
+      description: "Per iniziare senza impegno.",
+      features: ["1 progetto", "Accesso base alle funzionalità", "Supporto community"],
+      cta: { label: "Inizia gratis", href: "/auth/signin", variant: "secondary" },
+      highlighted: false,
+    },
+    {
+      title: "Pro",
+      price: "€19",
+      period: "al mese",
+      description: "Per professionisti e team in crescita.",
+      features: ["Progetti illimitati", "Accesso completo alle funzionalità", "Supporto prioritario via email", "Analisi avanzate"],
+      cta: { label: "Abbonati ora", href: "/api/stripe/checkout", variant: "primary" },
+      highlighted: true,
+    },
+    {
+      title: "Enterprise",
+      price: "Su misura",
+      period: "",
+      description: "Per grandi team con esigenze personalizzate.",
+      features: ["Tutto il piano Pro", "SLA garantito", "Onboarding dedicato", "Fatturazione personalizzata"],
+      cta: { label: "Contattaci", href: "mailto:hello@example.com", variant: "accent" },
+      highlighted: false,
+    },
+  ],
+}) {
   return (
     <section className="py-16 bg-base-200">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         {/* Intestazione sezione */}
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-base-content">Scegli il piano giusto</h2>
-          <p className="mt-3 text-base-content/60 text-lg">
-            Nessuna sorpresa. Cancella quando vuoi.
-          </p>
-        </div>
+        {(title || subtitle) && (
+          <div className="text-center mb-12">
+            {title && <h2 className="text-3xl font-bold text-base-content">{title}</h2>}
+            {subtitle && <p className="mt-3 text-base-content/60 text-lg">{subtitle}</p>}
+          </div>
+        )}
 
-        {/* Griglia piani */}
+        {/* Griglia piani — numero colonne dinamico in base ai piani forniti */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
-          {PLANS.map((plan) => (
+          {plans.map((plan) => (
             <Card
               key={plan.title}
               title={plan.title}

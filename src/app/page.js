@@ -1,6 +1,7 @@
 import Navbar from "@/components/Navbar";
 import HowItWorksSection from "@/components/HowItWorksSection";
 import PricingSection from "@/components/PricingSection";
+import PricingSectionForTwo from "@/components/PricingSectionForTwo";
 import Card from "@/components/Card";
 import Button from "@/components/Button";
 import Footer from "@/components/Footer";
@@ -232,7 +233,41 @@ export default function Home() {
 
       {/* ── Pricing ── */}
       <section id="pricing">
-        <PricingSection />
+        {/* <PricingSection /> */}
+        <PricingSectionForTwo
+          title="Build your SaaS for free"
+          subtitle="Get the lifetime deal when you're ready to launch it to the world!"
+          featuresTitle="Showcase your startups"
+          features={[
+            "Auth con Google e Magic link",
+            "Pagamenti Stripe preconfigurati",
+            "Email transazionali con Resend",
+            "Database MongoDB con Mongoose",
+            "Dashboard utente inclusa",
+            "Componenti UI riusabili",
+            "Deploy-ready su Vercel",
+          ]}
+          plans={[
+            {
+              name: "1-Year Pass",
+              oldPrice: "$55",
+              price: "$25",
+              currency: "USD",
+              description: "One-time payment. No subscription",
+              cta: { label: "Start for free", href: "/auth/signin" },
+              popular: false,
+            },
+            {
+              name: "Lifetime Deal",
+              oldPrice: "$75",
+              price: "$45",
+              currency: "USD",
+              description: "One-time payment. No subscription",
+              cta: { label: "Start for free", href: "/api/stripe/checkout" },
+              popular: true,
+            },
+          ]}
+        />
       </section>
 
       {/* ── Testimonials ── */}
