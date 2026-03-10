@@ -19,10 +19,12 @@ import Image from "next/image";
 function StarRating({ count = 5 }) {
   // Limita le stelle tra 1 e 5
   const stars = Math.min(5, Math.max(1, count));
+
+  // Rendi le stelle non selezionabili dal mouse
   return (
     <div className="flex gap-0.5 text-yellow-400 text-xl mb-4">
       {Array.from({ length: stars }).map((_, i) => (
-        <span key={i}>★</span>
+        <span key={i} className="select-none">★</span>
       ))}
     </div>
   );

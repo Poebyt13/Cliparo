@@ -9,8 +9,9 @@ import { useState } from "react";
  *
  * Props:
  *  - faqs: array di { question: string, answer: string }
+ *  - sticky: boolean — se true, la colonna sinistra rimane sticky durante lo scroll (opzionale)
  */
-export default function FaqSectionAlt({ faqs = [] }) {
+export default function FaqSectionAlt({ faqs = [], sticky = false, changeColorWhenOpen = false }) {
   // Indice dell'item aperto, null = tutti chiusi
   const [openIndex, setOpenIndex] = useState(null);
 
@@ -24,7 +25,7 @@ export default function FaqSectionAlt({ faqs = [] }) {
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-12 items-start">
 
           {/* ── Colonna sinistra: intestazione ── */}
-          <div className="lg:sticky lg:top-8">
+          <div className={sticky ? "lg:top-8 lg:sticky" : ""}>
             <span className="text-xs font-bold uppercase tracking-widest text-primary">
               FAQ
             </span>
@@ -42,10 +43,11 @@ export default function FaqSectionAlt({ faqs = [] }) {
                   {/* Pulsante domanda */}
                   <button
                     onClick={() => toggle(index)}
-                    className="w-full flex items-center justify-between py-4 text-left gap-4"
+                    className="w-full flex items-center justify-between py-4 text-left gap-4 cursor-pointer"
                     aria-expanded={isOpen}
                   >
-                    <span className="font-semibold text-base-content">{faq.question}</span>
+                    {/* Cambia colore della domanda se aperta */}
+                    <span className={`font-semibold ${changeColorWhenOpen && isOpen ? "text-primary" : "text-base-content"}`}>{faq.question}</span>
                     {/* Icona +/- animata */}
                     <span
                       className="shrink-0 text-base-content/50 transition-transform duration-300"

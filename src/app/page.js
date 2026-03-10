@@ -227,7 +227,7 @@ export default function Home() {
 
       {/* ── FAQ ── */}
       <section id="faq">
-        <FaqSectionAlt faqs={FAQS} />
+        <FaqSectionAlt faqs={FAQS} changeColorWhenOpen={true} />
       </section>
 
       {/* ── Call To Action finale ── */}
