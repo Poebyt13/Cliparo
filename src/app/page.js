@@ -9,6 +9,7 @@ import FaqSection from "@/components/FaqSection";
 import CallToActionSection from "@/components/CallToActionSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import SocialProof from "@/components/SocialProof";
+import ExplainInDays from "@/components/ExplainInDays";
 
 // import images from assets folder
 import avatar1 from "@/assets/image1.png";
@@ -27,6 +28,12 @@ import avatar11 from "@/assets/image11.png";
 import step1 from "@/assets/step1.png";
 import step2 from "@/assets/step2.png";
 import step3 from "@/assets/step3.png";
+
+// import explain in days images
+import day1 from "@/assets/day1.png";
+import day2 from "@/assets/day2.png";
+import day3 from "@/assets/day3.png";
+import day4 from "@/assets/day4.png";
 
 // Voci di navigazione della Navbar
 const NAV_LINKS = [
@@ -142,6 +149,13 @@ const FEATURES = [
   },
 ];
 
+const EXPLAIN_IN_DAYS_STEPS = [
+  { title: "Day 1", description: "Learn the fundamentals of coding", image: day1 },
+  { title: "Day 4", description: "Log in users and save in database", image: day2 },
+  { title: "Day 9", description: "Set up subscription payments", image: day3 },
+  { title: "Day 14", description: "Launch your idea!", image: day4 },
+];
+
 export default function Home() {
   return (
     <div className="min-h-screen bg-base-100 flex flex-col">
@@ -177,6 +191,7 @@ export default function Home() {
         </div>
       </section>
 
+      <ExplainInDays steps={EXPLAIN_IN_DAYS_STEPS} />
       {/* ── Features ── */}
       <section id="features" className="py-20 bg-base-100">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">

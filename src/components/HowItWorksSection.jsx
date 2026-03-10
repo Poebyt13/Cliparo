@@ -77,7 +77,7 @@ export default function HowItWorksSection({
 
               {/* Freccia separatrice — visibile solo su desktop tra gli step */}
               {index < steps.length - 1 && (
-                <div className="hidden md:flex items-center justify-center text-base-content/30 text-2xl flex-shrink-0 self-center">
+                <div className="hidden md:flex items-center justify-center text-base-content/30 text-2xl shrink-0 self-center">
                   →
                 </div>
               )}

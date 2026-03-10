@@ -31,10 +31,10 @@ export default function Footer() {
       {/* Contenitore principale allineato con il resto della pagina */}
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-14">
         {/* ── Griglia 4 colonne ── */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 text-center sm:text-left">
 
           {/* Colonna 1: Brand */}
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-4 items-center sm:items-start">
             <a href="/" className="text-xl font-bold text-primary">
               SaaS
             </a>
