@@ -2,22 +2,36 @@ import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema(
   {
-    // Email univoco dell'utente
-    email: {
-      type: String,
-      required: [true, "Email è obbligatoria"],
-      unique: true,
-      lowercase: true,
-      trim: true,
-      match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, "Inserisci un'email valida"],
-    },
+    // ── Campi NextAuth (usati dall'adapter MongoDB) ──
 
     // Nome dell'utente
     name: {
       type: String,
-      required: [true, "Nome è obbligatorio"],
+      trim: true,
+      default: null,
+    },
+
+    // Email univoco dell'utente
+    email: {
+      type: String,
+      unique: true,
+      lowercase: true,
       trim: true,
     },
+
+    // Immagine profilo (Google OAuth, ecc.)
+    image: {
+      type: String,
+      default: null,
+    },
+
+    // Data di verifica email (impostata da NextAuth dopo il magic link)
+    emailVerified: {
+      type: Date,
+      default: null,
+    },
+
+    // ── Campi SaaS ──
 
     // ID cliente Stripe per la gestione degli abbonamenti
     stripeCustomerId: {
@@ -25,22 +39,24 @@ const userSchema = new mongoose.Schema(
       default: null,
     },
 
-    // Stato dell'abbonamento (free, premium, trial)
+    // Stato dell'abbonamento (free, trial, premium)
     subscriptionStatus: {
       type: String,
-      enum: ["free", "premium", "trial"],
+      enum: ["free", "trial", "premium"],
       default: "free",
     },
   },
   {
     // Aggiunge automaticamente createdAt e updatedAt
     timestamps: true,
+    // Forza la collection "users" (compatibile con NextAuth adapter)
+    collection: "users",
   }
 );
 
 /**
- * Modello User per la gestione degli utenti.
- * Contiene informazioni essenziali: email, nome, abbonamento e integrazione Stripe.
+ * Modello User compatibile con NextAuth + MongoDB Adapter.
+ * Include campi di autenticazione e dati SaaS (Stripe, abbonamento).
  */
 const User = mongoose.models.User || mongoose.model("User", userSchema);
 
