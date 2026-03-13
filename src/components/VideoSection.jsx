@@ -35,32 +35,34 @@ export default function VideoSection({
                 {message}
               </p>
               {/* Freccia curva SVG che punta verso destra (verso il video) */}
-              <svg
-                width="52"
-                height="44"
-                viewBox="0 0 52 44"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                className="text-base-content/40 ml-auto mr-0"
-              >
-                {/* Curva da sinistra-alto verso destra-basso */}
-                <path
-                  d="M 6 4 C 6 22, 44 20, 46 38"
-                  stroke="currentColor"
-                  strokeWidth="1.8"
-                  strokeLinecap="round"
-                  fill="none"
-                />
-                {/* Punta freccia verso destra */}
-                <path
-                  d="M 38 34 L 46 38 L 40 44"
-                  stroke="currentColor"
-                  strokeWidth="1.8"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  fill="none"
-                />
-              </svg>
+             <svg
+  className="w-12 h-12 text-base-content/50 ml-auto"
+  viewBox="0 0 120 80"
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  {/* curva */}
+  <path
+    d="M10 10 C10 40, 70 35, 90 55"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+  />
+
+  {/* punta freccia */}
+  <path
+    d="M90 55 L82 50"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+  />
+  <path
+    d="M90 55 L84 63"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+  />
+</svg>
             </div>
           )}
 
