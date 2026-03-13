@@ -175,7 +175,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-base-100 flex flex-col">
       {/* ── Navbar ── */}
-      <Navbar links={NAV_LINKS} cta={navCta} userMenu={navUserMenu} />
+      <Navbar links={NAV_LINKS} cta={navCta} userMenu={navUserMenu} loading={status === "loading"} />
 
       {/* ── Hero ── */}
       <section className="bg-base-200 py-24">

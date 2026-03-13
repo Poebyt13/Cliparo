@@ -7,8 +7,9 @@
  *  - links: array di { label: string, href: string } — link di navigazione centrali
  *  - cta: { label: string, href: string } — pulsante call-to-action a destra
  *  - userMenu: { label: string, onLogout: () => void } | null — menu utente autenticato
+ *  - loading: boolean — mostra uno skeleton mentre la sessione viene verificata
  */
-export default function Navbar({ links = [], cta, userMenu }) {
+export default function Navbar({ links = [], cta, userMenu, loading = false }) {
   return (
     <div className="navbar bg-base-100 shadow-sm">
       {/* Contenitore interno allineato con max-w delle sezioni pagina */}
@@ -77,15 +78,18 @@ export default function Navbar({ links = [], cta, userMenu }) {
 
       {/* ── Destra: CTA e menu utente ── */}
       <div className="navbar-end gap-2">
+        {/* Skeleton durante il caricamento della sessione */}
+        {loading && <div className="skeleton h-8 w-20 rounded-lg"></div>}
+
         {/* Pulsante CTA */}
-        {cta && (
+        {!loading && cta && (
           <a href={cta.href} className="btn btn-primary btn-sm">
             {cta.label}
           </a>
         )}
 
         {/* Menu utente autenticato */}
-        {userMenu && (
+        {!loading && userMenu && (
           <div className="dropdown dropdown-end">
             <button
               tabIndex={0}
