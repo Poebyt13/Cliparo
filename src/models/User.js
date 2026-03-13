@@ -17,6 +17,7 @@ const userSchema = new mongoose.Schema(
       unique: true,
       lowercase: true,
       trim: true,
+      default: null,
     },
 
     // Immagine profilo (Google OAuth, ecc.)

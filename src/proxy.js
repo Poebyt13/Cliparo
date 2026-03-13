@@ -30,6 +30,7 @@ export const config = {
     "/dashboard/:path*",
     "/account/:path*",
     "/settings/:path*",
+    "/setup-profile",
     // Aggiungi qui altre route private
   ],
 };
