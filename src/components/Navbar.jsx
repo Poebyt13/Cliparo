@@ -108,6 +108,12 @@ export default function Navbar({ links = [], cta, userMenu }) {
                   {userMenu.label}
                 </span>
               </li>
+              {/* Link extra (es. Dashboard) passati tramite userMenu.links */}
+              {userMenu.links?.map((link) => (
+                <li key={link.href}>
+                  <a href={link.href} className="font-medium">{link.label}</a>
+                </li>
+              ))}
               <li>
                 <button
                   onClick={userMenu.onLogout}

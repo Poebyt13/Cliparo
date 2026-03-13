@@ -1,3 +1,6 @@
+"use client";
+
+import { useSession, signOut } from "next-auth/react";
 import Navbar from "@/components/Navbar";
 import HowItWorksSection from "@/components/HowItWorksSection";
 import PricingSection from "@/components/PricingSection";
@@ -43,8 +46,6 @@ const NAV_LINKS = [
   { label: "Prezzi", href: "#pricing" },
   { label: "FAQ", href: "#faq" },
 ];
-
-const NAV_CTA = { label: "Inizia gratis", href: "/auth/signin" };
 
 // Recensioni clienti mostrate nella sezione testimonials
 const TESTIMONIALS = [
@@ -159,10 +160,22 @@ const EXPLAIN_IN_DAYS_STEPS = [
 ];
 
 export default function Home() {
+  const { data: session, status } = useSession();
+
+  // Finché la sessione è in caricamento, non mostrare né CTA né userMenu per evitare il flash
+  const navCta = status === "unauthenticated" ? { label: "Inizia gratis", href: "/auth/signin" } : null;
+  const navUserMenu = status === "authenticated"
+    ? {
+        label: session.user.email,
+        links: [{ label: "Dashboard", href: "/dashboard" }],
+        onLogout: () => signOut(),
+      }
+    : null;
+
   return (
     <div className="min-h-screen bg-base-100 flex flex-col">
       {/* ── Navbar ── */}
-      <Navbar links={NAV_LINKS} cta={NAV_CTA} />
+      <Navbar links={NAV_LINKS} cta={navCta} userMenu={navUserMenu} />
 
       {/* ── Hero ── */}
       <section className="bg-base-200 py-24">
