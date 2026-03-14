@@ -105,20 +105,14 @@ stripe trigger invoice.payment_succeeded
 stripe trigger invoice.payment_failed
 ```
 
-### 3. Testare il downgrade con utente del seed
+## 3 TEST — Simulare la scadenza abbonamento
 
-Stripe usa un `stripeCustomerId` di test. Per collegarlo a un utente seed:
+Simula il downgrade a free + invio email di scadenza, esattamente come farebbe Stripe in produzione:
 
-1. Triggera l'evento e leggi il `customer` ID dai log del listener
-2. Aggiorna un utente nel DB:
-```js
-db.users.updateOne(
-  { email: "premium@test.dev" },
-  { $set: { stripeCustomerId: "cus_xxxxxxxx", subscriptionStatus: "premium" } }
-)
-```
-3. Triggera di nuovo `stripe trigger customer.subscription.deleted`
-4. Verifica che l'utente sia passato a `free`
+```bash
+curl -s -X POST http://localhost:3000/api/dev/test-expire \
+  -H "Content-Type: application/json" \
+  -d '{"email": "premium@test.dev"}'
 
 ---
 
@@ -129,6 +123,7 @@ db.users.updateOne(
 | POST | `/api/dev/reset` | Reset completo database | Solo dev |
 | POST | `/api/dev/seed` | Crea utenti di test | Solo dev |
 | GET | `/api/cron/subscriptions` | Avviso scadenza 3 giorni | Dev + Prod (con `CRON_SECRET`) |
+| POST | `/api/dev/test-expire` | Simula scadenza abbonamento (downgrade + email) | Solo dev |
 | GET/POST | `/api/auth/*` | NextAuth (login, sessione) | Tutti |
 | POST | `/api/stripe/checkout` | Crea sessione checkout Stripe | Tutti |
 | POST | `/api/stripe/webhook` | Riceve eventi da Stripe | Tutti |
