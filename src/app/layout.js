@@ -1,8 +1,8 @@
-import { Space_Grotesk, Geist_Mono } from "next/font/google";
+import { Inter, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import SessionProviderWrapper from "@/components/SessionProviderWrapper";
 
-const geistSans = Space_Grotesk({
+const geistSans = Inter({
   variable: "--font-sans",
   subsets: ["latin"],
 });
