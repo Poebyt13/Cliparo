@@ -1,5 +1,7 @@
 "use client";
 
+import Logo from "@/components/Logo";
+
 /**
  * Navbar responsive con logo, link centrali e area destra con CTA e menu utente.
  *
@@ -56,9 +58,7 @@ export default function Navbar({ links = [], cta, userMenu, loading = false }) {
         </div>
 
         {/* Logo */}
-        <a href="/" className="btn btn-ghost text-xl font-bold text-primary">
-          SaaS
-        </a>
+        <Logo size="md" />
       </div>
 
       {/* ── Centro: link di navigazione (solo desktop) ── */}

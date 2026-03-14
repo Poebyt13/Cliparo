@@ -6,6 +6,7 @@ import PageContainer from "@/components/PageContainer";
 import Card from "@/components/Card";
 import Input from "@/components/Input";
 import Button from "@/components/Button";
+import Logo from "@/components/Logo";
 
 /**
  * Pagina di login con Magic Link email e accesso Google.
@@ -58,6 +59,9 @@ export default function LoginPage() {
         <Card className="shadow-lg">
           {/* Intestazione */}
           <div className="text-center mb-6">
+            <div className="flex justify-center mb-4">
+              <Logo size="lg" href="/" />
+            </div>
             <h1 className="text-2xl font-bold text-base-content">Accedi al tuo account</h1>
             <p className="text-base-content/60 text-sm mt-1">
               Nessuna password necessaria.
