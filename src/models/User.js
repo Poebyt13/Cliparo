@@ -46,6 +46,12 @@ const userSchema = new mongoose.Schema(
       enum: ["free", "trial", "premium"],
       default: "free",
     },
+
+    // Flag: true ad ogni login, false dopo che l'utente completa /setup-profile
+    profileSetupPending: {
+      type: Boolean,
+      default: true,
+    },
   },
   {
     // Aggiunge automaticamente createdAt e updatedAt

@@ -62,10 +62,10 @@ export async function POST(req) {
       updateFields.image = `/uploads/${fileName}`;
     }
 
-    // Aggiorna solo name e image, senza toccare gli altri campi
+    // Aggiorna name, image e imposta profileSetupPending a false
     const updatedUser = await User.findOneAndUpdate(
       { email: session.user.email },
-      { $set: updateFields },
+      { $set: { ...updateFields, profileSetupPending: false } },
       { new: true }
     );
 

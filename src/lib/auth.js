@@ -10,7 +10,8 @@ import User from "@/models/User";
 
 /**
  * Configurazione NextAuth con Google OAuth, Magic Link email e MongoDB adapter.
- * Usa clientPromise (MongoClient nativo) richiesto da @auth/mongodb-adapter.
+ * I callback usano Mongoose (User model) per garantire che i default dello schema
+ * vengano sempre applicati, indipendentemente dal provider.
  */
 export const authOptions = {
   // Adapter usa il client nativo MongoDB, non Mongoose
@@ -59,33 +60,48 @@ export const authOptions = {
   callbacks: {
     /**
      * Eseguito dopo ogni login riuscito.
-     * Sincronizza name e image da Google e garantisce i campi SaaS.
+     * Usa Mongoose con upsert atomico e setDefaultsOnInsert per garantire
+     * che tutti i campi dello schema siano sempre presenti nel documento.
+     * - name / image da Google → solo se il name è ancora null
+     * - stripeCustomerId / subscriptionStatus → applicati dai default dello schema
      */
     async signIn({ user, account }) {
       try {
         await connectToDatabase();
 
-        // Campi che vanno aggiornati solo se arrivano dal provider (es. Google)
-        const fieldsToUpdate = {};
-        if (account?.provider === "google") {
-          if (user.name)  fieldsToUpdate.name  = user.name;
-          if (user.image) fieldsToUpdate.image = user.image;
+        // Legge il documento esistente una volta sola (serve per più condizioni)
+        const existingUser = await User.findOne({ email: user.email }).lean();
+
+        const setFields = {};
+
+        // Inizializza profileSetupPending solo se non è ancora presente nel documento
+        // (non va mai resettato a true su login successivi)
+        if (existingUser?.profileSetupPending === undefined) {
+          setFields.profileSetupPending = true;
         }
 
-        // Garantisce che i campi SaaS esistano sempre nel documento
-        await User.findOneAndUpdate(
-          { email: user.email },
-          {
-            // Aggiorna name/image se arrivano da Google
-            ...(Object.keys(fieldsToUpdate).length > 0 && { $set: fieldsToUpdate }),
-            // Imposta i campi SaaS solo se il documento è nuovo o i campi mancano
-            $setOnInsert: {
-              stripeCustomerId: null,
-              subscriptionStatus: "free",
-            },
-          },
-          { upsert: true, new: true, setDefaultsOnInsert: true }
-        );
+        // Inizializza campi SaaS solo se mancanti (mai sovrascrivere valori esistenti)
+        if (existingUser?.stripeCustomerId === undefined) {
+          setFields.stripeCustomerId = null;
+        }
+        if (existingUser?.subscriptionStatus === undefined) {
+          setFields.subscriptionStatus = "free";
+        }
+
+        // Google: precompila name/image solo se il name è ancora null
+        if (account?.provider === "google" && !existingUser?.name) {
+          if (user.name)  setFields.name  = user.name;
+          if (user.image) setFields.image = user.image;
+        }
+
+        // Applica l'update solo se ci sono campi da normalizzare
+        if (Object.keys(setFields).length > 0) {
+          await User.findOneAndUpdate(
+            { email: user.email },
+            { $set: setFields },
+            { upsert: true, setDefaultsOnInsert: true }
+          );
+        }
       } catch (error) {
         console.error("Errore nel callback signIn:", error);
       }
@@ -94,50 +110,26 @@ export const authOptions = {
     },
 
     /**
-     * Arricchisce la sessione con id, subscriptionStatus e flag di profilo incompleto.
+     * Arricchisce la sessione con id, subscriptionStatus e flag setupPending.
+     * Legge dai campi garantiti dal model User.
      */
     async session({ session, user }) {
-      // Espone l'id MongoDB e lo stato abbonamento nella session
       session.user.id = user.id;
 
       try {
         await connectToDatabase();
         const dbUser = await User.findOne({ email: session.user.email }).lean();
+
         if (dbUser) {
           session.user.subscriptionStatus = dbUser.subscriptionStatus ?? "free";
           session.user.stripeCustomerId   = dbUser.stripeCustomerId   ?? null;
-          // Flag per il frontend: profilo incompleto se manca name
-          session.user.needsSetup = !dbUser.name;
+          session.user.needsSetup         = !!dbUser.profileSetupPending;
         }
       } catch (error) {
         console.error("Errore nel callback session:", error);
       }
 
       return session;
-    },
-
-    /**
-     * Intercetta il redirect dopo il login.
-     * Se il profilo è incompleto, forza il redirect a /setup-profile.
-     */
-    async redirect({ url, baseUrl }) {
-      try {
-        await connectToDatabase();
-
-        // Estrae l'email dalla URL di callback (quando torna dal provider)
-        // Controlla il DB per vedere se il profilo è completo
-        const callbackUrl = url.startsWith("/") ? url : new URL(url).pathname;
-
-        // Non intercettare se sta già andando a /setup-profile o /auth
-        if (callbackUrl.startsWith("/setup-profile") || callbackUrl.startsWith("/auth")) {
-          return url.startsWith("/") ? `${baseUrl}${url}` : url;
-        }
-      } catch (error) {
-        console.error("Errore nel callback redirect:", error);
-      }
-
-      // Redirect standard: URL interni restano interni
-      return url.startsWith("/") ? `${baseUrl}${url}` : url;
     },
   },
 
