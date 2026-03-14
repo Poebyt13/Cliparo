@@ -47,6 +47,12 @@ const userSchema = new mongoose.Schema(
       default: "free",
     },
 
+    // Data di scadenza del piano corrente (null per free, data per trial e premium)
+    subscriptionEnd: {
+      type: Date,
+      default: null,
+    },
+
     // Flag: true ad ogni login, false dopo che l'utente completa /setup-profile
     profileSetupPending: {
       type: Boolean,

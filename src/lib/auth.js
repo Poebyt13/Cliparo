@@ -29,6 +29,7 @@ export const authOptions = {
     EmailProvider({
       from: process.env.EMAIL_FROM,
       sendVerificationRequest: async ({ identifier, url }) => {
+        console.log("URL Login: ", url);
         try {
           // Usa il template React centralizzato e la utility sendEmail
           await sendEmail({
@@ -87,6 +88,9 @@ export const authOptions = {
         if (existingUser?.subscriptionStatus === undefined) {
           setFields.subscriptionStatus = "free";
         }
+        if (existingUser?.subscriptionEnd === undefined) {
+          setFields.subscriptionEnd = null;
+        }
 
         // Google: al primo login (existingUser è null perché l'adapter non ha ancora creato il documento)
         // o quando un utente magic link (senza nome) si autentica poi con Google.
@@ -113,15 +117,35 @@ export const authOptions = {
 
     /**
      * Arricchisce la sessione con id, subscriptionStatus e flag setupPending.
-     * Legge dai campi garantiti dal model User.
+     * Controlla anche se l'abbonamento è scaduto e fa il downgrade a free.
      */
     async session({ session, user }) {
-      // Il parametro `user` è già il documento completo fornito dall'adapter MongoDB:
-      // non serve una seconda query al DB. I campi custom sono già disponibili qui.
-      session.user.id                 = user.id;
-      session.user.subscriptionStatus = user.subscriptionStatus ?? "free";
-      session.user.stripeCustomerId   = user.stripeCustomerId   ?? null;
-      session.user.needsSetup         = !!user.profileSetupPending;
+      session.user.id              = user.id;
+      session.user.subscriptionEnd = user.subscriptionEnd ?? null;
+      session.user.stripeCustomerId = user.stripeCustomerId ?? null;
+      session.user.needsSetup      = !!user.profileSetupPending;
+
+      // Controlla se l'abbonamento è scaduto (trial o premium con data passata)
+      const isExpired =
+        user.subscriptionEnd != null &&
+        new Date(user.subscriptionEnd) < new Date() &&
+        (user.subscriptionStatus === "trial" || user.subscriptionStatus === "premium");
+
+      if (isExpired) {
+        // Restituisce "free" nella sessione e aggiorna il DB in background
+        session.user.subscriptionStatus = "free";
+        session.user.subscriptionEnd    = null;
+
+        connectToDatabase()
+          .then(() =>
+            User.findByIdAndUpdate(user.id, {
+              $set: { subscriptionStatus: "free", subscriptionEnd: null },
+            })
+          )
+          .catch((err) => console.error("Errore nel downgrade abbonamento:", err));
+      } else {
+        session.user.subscriptionStatus = user.subscriptionStatus ?? "free";
+      }
 
       return session;
     },
