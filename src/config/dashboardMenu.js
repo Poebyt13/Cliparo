@@ -40,6 +40,21 @@ const dashboardMenu = [
     href: "/dashboard/settings",
     icon: "settings",
   },
+  { 
+    type: "item",
+    label: "Changelog",
+    href: "/dashboard/changelog",
+    icon: "bell",
+    disabled: true, 
+    badge: "soon"
+  },
+  {
+    type: "item",
+    label: "Documentazione",
+    href: "https://example.com/docs",
+    icon: "book",
+    external: true,
+  }
 ];
 
 export default dashboardMenu;

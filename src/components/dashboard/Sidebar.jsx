@@ -50,6 +50,11 @@ const iconMap = {
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
     </svg>
   ),
+  book: (
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+    </svg>
+  ),
 };
 
 /**
@@ -62,21 +67,62 @@ function SidebarIcon({ name }) {
 }
 
 /**
+ * Badge opzionale accanto al label dell'item.
+ */
+function ItemBadge({ value }) {
+  if (!value) return null;
+  return (
+    <span className="badge badge-sm badge-neutral ml-auto">{value}</span>
+  );
+}
+
+/**
  * Singolo item del menu sidebar.
  * Evidenzia come "active" se il pathname corrente corrisponde all'href.
+ * Se external === true usa un tag <a> con target="_blank", altrimenti usa Link di Next.js.
+ * Se disabled === true renderizza uno <span> non cliccabile.
  */
 function SidebarItem({ item, pathname }) {
   const isActive = pathname === item.href;
 
+  const content = (
+    <>
+      <SidebarIcon name={item.icon} />
+      {item.label}
+      <ItemBadge value={item.badge} />
+    </>
+  );
+
+  // Item disabilitato: non cliccabile
+  if (item.disabled) {
+    return (
+      <li>
+        <span className="opacity-50 cursor-not-allowed">
+          {content}
+        </span>
+      </li>
+    );
+  }
+
   return (
     <li>
-      <Link
-        href={item.href}
-        className={isActive ? "active" : ""}
-      >
-        <SidebarIcon name={item.icon} />
-        {item.label}
-      </Link>
+      {item.external ? (
+        <a
+          href={item.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={isActive ? "active" : ""}
+        >
+          {content}
+        </a>
+      ) : (
+        <Link
+          href={item.href}
+          className={isActive ? "active" : ""}
+        >
+          {content}
+        </Link>
+      )}
     </li>
   );
 }
