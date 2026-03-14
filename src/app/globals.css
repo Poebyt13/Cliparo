@@ -56,13 +56,13 @@
   --color-base-content: oklch(20% 0.02 264);     /* testo principale          */
 
   /* ── Colori semantici ───────────────────────────────────── */
-  --color-info:            oklch(68% 0.18 220);  /* azzurro info    */
+  --color-info:            oklch(70% 0.20 220);  /* azzurro info    */
   --color-info-content:    oklch(16% 0.02 220);
-  --color-success:         oklch(62% 0.22 140);  /* verde successo  */
+  --color-success:         oklch(65% 0.25 140);  /* verde successo  */
   --color-success-content: oklch(16% 0.02 140);
-  --color-warning:         oklch(75% 0.22 60);   /* arancio warning */
+  --color-warning:         oklch(68% 0.25 60);   /* arancio warning */
   --color-warning-content: oklch(16% 0.02 60);
-  --color-error:           oklch(58% 0.24 25);   /* rosso errore    */
+  --color-error:           oklch(60% 0.27 20);   /* rosso errore    */
   --color-error-content:   oklch(97% 0.01 25);
 
   /* ── Border radius — controlla l'arrotondamento globale ─── */
@@ -105,13 +105,13 @@
   --color-base-content: oklch(92% 0.01 264);     /* testo principale: quasi bianco  */
 
   /* ── Colori semantici ───────────────────────────────────── */
-  --color-info:            oklch(68% 0.18 220);
+  --color-info:            oklch(72% 0.20 220);
   --color-info-content:    oklch(16% 0.02 220);
-  --color-success:         oklch(62% 0.22 140);
+  --color-success:         oklch(70% 0.25 140);
   --color-success-content: oklch(16% 0.02 140);
-  --color-warning:         oklch(72% 0.20 60);
+  --color-warning:         oklch(75% 0.25 60);
   --color-warning-content: oklch(16% 0.02 60);
-  --color-error:           oklch(60% 0.24 25);
+  --color-error:           oklch(65% 0.27 20);   /* rosso errore    */
   --color-error-content:   oklch(97% 0.01 25);
 
   /* ── Border radius (coerente con saas-light) ─────────────── */

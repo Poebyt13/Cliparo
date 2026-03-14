@@ -53,9 +53,9 @@ export default function LoginPage() {
   }
 
   return (
-    <PageContainer>
-      <div className="flex min-h-[70vh] items-center justify-center">
-        <Card className="w-full max-w-md">
+    <div className="flex min-h-screen items-center justify-center bg-base-100 px-4 py-12">
+      <div className="w-full max-w-md">
+        <Card className="shadow-lg">
           {/* Intestazione */}
           <div className="text-center mb-6">
             <h1 className="text-2xl font-bold text-base-content">Accedi al tuo account</h1>
@@ -112,6 +112,6 @@ export default function LoginPage() {
           )}
         </Card>
       </div>
-    </PageContainer>
+    </div>
   );
 }
