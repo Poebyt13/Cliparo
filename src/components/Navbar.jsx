@@ -6,7 +6,7 @@
  * Props:
  *  - links: array di { label: string, href: string } — link di navigazione centrali
  *  - cta: { label: string, href: string } — pulsante call-to-action a destra
- *  - userMenu: { label: string, onLogout: () => void } | null — menu utente autenticato
+ *  - userMenu: { label: string, image?: string, onLogout: () => void } | null — menu utente autenticato
  *  - loading: boolean — mostra uno skeleton mentre la sessione viene verificata
  */
 export default function Navbar({ links = [], cta, userMenu, loading = false }) {
@@ -96,11 +96,17 @@ export default function Navbar({ links = [], cta, userMenu, loading = false }) {
               role="button"
               className="btn btn-ghost btn-circle avatar placeholder"
             >
-              <div className="bg-neutral text-neutral-content w-9 rounded-full flex items-center justify-center">
-                <span className="text-sm font-semibold">
-                  {userMenu.label?.charAt(0).toUpperCase()}
-                </span>
-              </div>
+              {userMenu.image ? (
+                <div className="w-9 h-9 rounded-full overflow-hidden">
+                  <img src={userMenu.image} alt={userMenu.label} />
+                </div>
+              ) : (
+                <div className="bg-neutral text-neutral-content w-9 rounded-full flex items-center justify-center">
+                  <span className="text-sm font-semibold">
+                    {userMenu.label?.charAt(0).toUpperCase()}
+                  </span>
+                </div>
+              )}
             </button>
 
             <ul

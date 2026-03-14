@@ -167,6 +167,7 @@ export default function Home() {
   const navUserMenu = status === "authenticated"
     ? {
         label: session.user.email,
+        image: session.user.image || null,
         links: [{ label: "Dashboard", href: "/dashboard" }],
         onLogout: () => signOut(),
       }
