@@ -83,43 +83,6 @@ export default function DashboardPage() {
           </div>
         </div>
       </div>
-
-      {/* Demo content gating */}
-      <div className="space-y-4">
-        <h2 className="text-xl font-semibold text-base-content">Contenuti per piano</h2>
-
-        <div className="grid gap-4 sm:grid-cols-2">
-          {/* Contenuto trial */}
-          <PremiumGate requiredPlan="trial">
-            <div className="card bg-base-100 shadow-sm">
-              <div className="card-body space-y-2">
-                <div className="flex items-center gap-2">
-                  <span className="badge badge-warning badge-sm">Trial</span>
-                  <h3 className="font-semibold">Statistiche avanzate</h3>
-                </div>
-                <p className="text-base-content/60 text-sm">
-                  Analisi dettagliate delle tue attività, grafici e report settimanali.
-                </p>
-              </div>
-            </div>
-          </PremiumGate>
-
-          {/* Contenuto premium */}
-          <PremiumGate requiredPlan="premium">
-            <div className="card bg-base-100 shadow-sm">
-              <div className="card-body space-y-2">
-                <div className="flex items-center gap-2">
-                  <span className="badge badge-primary badge-sm">Premium</span>
-                  <h3 className="font-semibold">Export dati</h3>
-                </div>
-                <p className="text-base-content/60 text-sm">
-                  Esporta i tuoi dati in CSV, PDF e via API. Integrazioni avanzate incluse.
-                </p>
-              </div>
-            </div>
-          </PremiumGate>
-        </div>
-      </div>
     </div>
   );
 }

@@ -38,6 +38,7 @@ const userSchema = new mongoose.Schema(
     stripeCustomerId: {
       type: String,
       default: null,
+      index: true,
     },
 
     // Stato dell'abbonamento (free, trial, premium)
@@ -66,6 +67,9 @@ const userSchema = new mongoose.Schema(
     collection: "users",
   }
 );
+
+// Indice composto per la query del cron (warning abbonamenti in scadenza)
+userSchema.index({ subscriptionStatus: 1, subscriptionEnd: 1 });
 
 /**
  * Modello User compatibile con NextAuth + MongoDB Adapter.

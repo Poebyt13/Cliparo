@@ -12,8 +12,10 @@ const SUBSCRIPTION_STATUS_MAP = {
   active: "premium",
   trialing: "trial",
   canceled: "free",
-  unpaid: "free",
-  past_due: "free",
+  // past_due e unpaid: Stripe ritenta il pagamento automaticamente.
+  // L'utente resta nel piano attivo fino a customer.subscription.deleted.
+  unpaid: "premium",
+  past_due: "premium",
   incomplete: "free",
   incomplete_expired: "free",
 };
@@ -49,6 +51,19 @@ export async function POST(req) {
     await connectToDatabase();
 
     switch (event.type) {
+      // Checkout completato → collega stripeCustomerId all'utente (safety net)
+      case "checkout.session.completed": {
+        const checkoutSession = event.data.object;
+        if (checkoutSession.customer && checkoutSession.metadata?.userId) {
+          // Aggiorna solo se l'utente non ha ancora un customerId (idempotente)
+          await User.findOneAndUpdate(
+            { _id: checkoutSession.metadata.userId, stripeCustomerId: null },
+            { stripeCustomerId: checkoutSession.customer }
+          );
+        }
+        break;
+      }
+
       // Abbonamento creato o aggiornato
       case "customer.subscription.created":
       case "customer.subscription.updated": {
@@ -140,7 +155,7 @@ async function updateUserSubscription(stripeCustomerId, stripeStatus, subscripti
   const user = await User.findOneAndUpdate(
     { stripeCustomerId },
     { subscriptionStatus, subscriptionEnd },
-    { new: true }
+    { returnDocument: "after" }
   );
 
   if (!user) {

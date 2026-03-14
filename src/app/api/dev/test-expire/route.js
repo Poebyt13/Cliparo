@@ -10,9 +10,13 @@ import SubscriptionExpiredEmail from "@/emails/subscriptionExpired";
  * Replica esattamente il comportamento del webhook customer.subscription.deleted.
  * Solo in ambiente di sviluppo.
  *
+ * Sicurezza: NODE_ENV è settato automaticamente da Next.js/Vercel
+ * e non può essere sovrascritto dal client. Il check è affidabile.
+ *
  * Body: { "email": "utente@test.dev" }
  */
 export async function POST(request) {
+  // Blocco di sicurezza: Next.js/Vercel settano NODE_ENV automaticamente
   if (process.env.NODE_ENV === "production") {
     return NextResponse.json({ error: "Non disponibile." }, { status: 403 });
   }
