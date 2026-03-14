@@ -4,49 +4,62 @@ import siteConfig from "@/config/site";
 
 /**
  * Componente Logo riusabile.
- * Mostra l'immagine da siteConfig.logoImage se disponibile,
- * altrimenti mostra siteConfig.logoText come testo.
+ * Mostra icona, testo, o entrambi in base alla prop `variant` e a siteConfig.
+ * Se logoImage non esiste, fallback automatico a testo (usa name se logoText è null).
  *
  * Props:
- *  - size: "sm" | "md" | "lg" — dimensione del logo (default "md")
- *  - href: string — link al click (default "/")
- *  - className: string — classi CSS extra
+ *  - size: "sm" | "md" | "lg"                    — dimensione (default "md")
+ *  - variant: "icon" | "text" | "both"          — cosa mostrare (default "both")
+ *  - href: string                                 — link al click (default "/")
+ *  - className: string                            — classi CSS extra
+ *
+ * Comportamenti variant:
+ *  - "icon":  solo icona (fallback a testo se logoImage non esiste)
+ *  - "text":  solo testo (usa logoText, fallback a name)
+ *  - "both":  icona + testo affianco (se logoImage esiste), altrimenti solo testo
  */
-export default function Logo({ size = "md", href = "/", className = "" }) {
+export default function Logo({ size = "md", variant = "both", href = "/", className = "" }) {
   // Classi dimensione testo in base alla prop size
   const textSizes = {
-    sm: "text-lg",
+    sm: "text-base",
     md: "text-xl",
     lg: "text-3xl",
   };
 
-  // Dimensioni immagine in base alla prop size
+  // Dimensioni icona in base alla prop size
   const imgSizes = {
     sm: { width: 24, height: 24 },
     md: { width: 32, height: 32 },
     lg: { width: 48, height: 48 },
   };
 
-  const content = siteConfig.logoImage ? (
-    // Mostra immagine logo
-    <Image
-      src={siteConfig.logoImage}
-      alt={siteConfig.logoText}
-      width={imgSizes[size].width}
-      height={imgSizes[size].height}
-      className="object-contain"
-      priority
-    />
-  ) : (
-    // Mostra testo logo
-    <span className={`font-bold text-primary ${textSizes[size]}`}>
-      {siteConfig.logoText}
-    </span>
-  );
+  // Determina che cosa mostrare in base alla prop variant
+  const showIcon = (variant === "icon" || variant === "both") && siteConfig.logoImage;
+  const showText = (variant === "text" || variant === "both");
+  
+  // Testo da mostrare: logoText se esiste, fallback a name (che esiste sempre)
+  const displayText = siteConfig.logoText || siteConfig.name;
 
   return (
     <Link href={href} className={`inline-flex items-center gap-2 ${className}`}>
-      {content}
+      {/* Icona — mostrata in base a variant se logoImage esiste */}
+      {showIcon && (
+        <Image
+          src={siteConfig.logoImage}
+          alt={displayText}
+          width={imgSizes[size].width}
+          height={imgSizes[size].height}
+          className="object-contain"
+          priority
+        />
+      )}
+
+      {/* Testo — mostrato in base a variant; se no icon, mostra in ogni caso (fallback) */}
+      {(showText || (!showIcon && variant !== "icon")) && (
+        <span className={`font-bold text-primary ${textSizes[size]}`}>
+          {displayText}
+        </span>
+      )}
     </Link>
   );
 }

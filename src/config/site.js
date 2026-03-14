@@ -16,10 +16,11 @@ const siteConfig = {
   // URL base del sito (senza slash finale)
   url: process.env.NEXTAUTH_URL || "http://localhost:3000",
 
-  // Logo come immagine: imposta il path (es. "/logo.png") oppure null per usare il testo
-  logoImage: null,
+  // Logo come immagine: imposta il path (es. "/icon.svg") oppure null per usare solo il testo
+  logoImage: "/icon.svg",
 
-  // Testo alternativo all'immagine logo (e alt text dell'img)
+  // Testo mostrato affianco all'icona (e usato come alt text).
+  // Imposta a null per mostrare solo l'immagine senza testo affianco.
   logoText: "SaaS",
 };
 
