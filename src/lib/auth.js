@@ -88,7 +88,9 @@ export const authOptions = {
           setFields.subscriptionStatus = "free";
         }
 
-        // Google: precompila name/image solo se il name è ancora null
+        // Google: al primo login (existingUser è null perché l'adapter non ha ancora creato il documento)
+        // o quando un utente magic link (senza nome) si autentica poi con Google.
+        // In entrambi i casi, copia name/image solo se il documento non ha ancora un nome.
         if (account?.provider === "google" && !existingUser?.name) {
           if (user.name)  setFields.name  = user.name;
           if (user.image) setFields.image = user.image;
@@ -114,20 +116,12 @@ export const authOptions = {
      * Legge dai campi garantiti dal model User.
      */
     async session({ session, user }) {
-      session.user.id = user.id;
-
-      try {
-        await connectToDatabase();
-        const dbUser = await User.findOne({ email: session.user.email }).lean();
-
-        if (dbUser) {
-          session.user.subscriptionStatus = dbUser.subscriptionStatus ?? "free";
-          session.user.stripeCustomerId   = dbUser.stripeCustomerId   ?? null;
-          session.user.needsSetup         = !!dbUser.profileSetupPending;
-        }
-      } catch (error) {
-        console.error("Errore nel callback session:", error);
-      }
+      // Il parametro `user` è già il documento completo fornito dall'adapter MongoDB:
+      // non serve una seconda query al DB. I campi custom sono già disponibili qui.
+      session.user.id                 = user.id;
+      session.user.subscriptionStatus = user.subscriptionStatus ?? "free";
+      session.user.stripeCustomerId   = user.stripeCustomerId   ?? null;
+      session.user.needsSetup         = !!user.profileSetupPending;
 
       return session;
     },

@@ -10,6 +10,7 @@ import Button from "@/components/Button";
 
 const MAX_NAME_LENGTH = 255;
 const ALLOWED_EXTENSIONS = ["jpg", "jpeg", "png"];
+const MAX_IMAGE_SIZE = 2 * 1024 * 1024; // 2MB
 
 /**
  * Pagina di completamento profilo.
@@ -59,6 +60,12 @@ export default function SetupProfilePage() {
     const ext = selected.name.split(".").pop().toLowerCase();
     if (!ALLOWED_EXTENSIONS.includes(ext)) {
       setError("Formato non valido. Usa JPG o PNG.");
+      return;
+    }
+
+    // Controllo lato client per feedback immediato (il server valida nuovamente)
+    if (selected.size > MAX_IMAGE_SIZE) {
+      setError("Immagine troppo grande. Massimo 2MB.");
       return;
     }
 

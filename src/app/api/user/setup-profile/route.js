@@ -9,6 +9,7 @@ import { writeFile } from "fs/promises";
 // Tipi MIME accettati per le immagini
 const ALLOWED_TYPES = ["image/jpeg", "image/png"];
 const MAX_NAME_LENGTH = 255;
+const MAX_IMAGE_SIZE = 2 * 1024 * 1024; // 2MB
 
 /**
  * POST /api/user/setup-profile
@@ -45,6 +46,11 @@ export async function POST(req) {
       // Validazione tipo file
       if (!ALLOWED_TYPES.includes(imageFile.type)) {
         return NextResponse.json({ error: "Formato immagine non valido. Usa JPG o PNG." }, { status: 400 });
+      }
+
+      // Controllo dimensione prima di leggere i byte in memoria
+      if (imageFile.size > MAX_IMAGE_SIZE) {
+        return NextResponse.json({ error: "Immagine troppo grande. Massimo 2MB." }, { status: 400 });
       }
 
       // Genera nome univoco: timestamp-userId.estensione
