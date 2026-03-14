@@ -59,7 +59,7 @@ export default function LoginPage() {
         <Card className="shadow-lg">
           {/* Intestazione */}
           <div className="text-center mb-6">
-            <div className="flex justify-center mb-4">
+            <div className="flex justify-center mb-6 mt-3">
               <Logo size="lg" href="/" />
             </div>
             <h1 className="text-2xl font-bold text-base-content">Accedi al tuo account</h1>

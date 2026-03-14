@@ -1,5 +1,20 @@
 @import "tailwindcss";
 
+/* ──────────────────────────────────────────────────────────────
+   TIPOGRAFIA GLOBALE
+   Il font viene caricato in src/app/layout.js tramite next/font.
+   Per cambiare font: modifica l'import in layout.js.
+   Le variabili CSS --font-sans e --font-mono vengono esposte
+   automaticamente e applicate qui a tutto il documento.
+────────────────────────────────────────────────────────────── */
+body {
+  font-family: var(--font-sans, sans-serif);
+}
+
+code, kbd, pre, samp {
+  font-family: var(--font-mono, monospace);
+}
+
 /* ═══════════════════════════════════════════════════════════════
    SISTEMA DI TEMI GLOBALE — SaaS Boilerplate
    ─────────────────────────────────────────────────────────────
