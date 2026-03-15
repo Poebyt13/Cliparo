@@ -16,12 +16,19 @@ export function proxy(req) {
     req.cookies.get("next-auth.session-token")?.value ||
     req.cookies.get("__Secure-next-auth.session-token")?.value;
 
-  // Utente autenticato che prova ad accedere a pagine auth → dashboard
-  if (sessionToken && AUTH_ROUTES.some((route) => pathname.startsWith(route))) {
+  const isAuthRoute = AUTH_ROUTES.some((route) => pathname.startsWith(route));
+
+  // Utente autenticato su pagina auth → dashboard
+  if (sessionToken && isAuthRoute) {
     return NextResponse.redirect(new URL("/dashboard", req.url));
   }
 
-  // Utente non autenticato che prova ad accedere a route protette → signin
+  // Utente non autenticato su pagina auth → lascia passare
+  if (!sessionToken && isAuthRoute) {
+    return NextResponse.next();
+  }
+
+  // Utente non autenticato su route protetta → signin
   if (!sessionToken) {
     const signInUrl = new URL("/auth/signin", req.url);
     signInUrl.searchParams.set("callbackUrl", req.url);

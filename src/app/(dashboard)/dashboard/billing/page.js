@@ -135,7 +135,7 @@ export default function BillingPage() {
           ) : (
             <Button
               label="Scegli un piano"
-              href="/pricing"
+              href="/#pricing"
               variant="primary"
             />
           )}
