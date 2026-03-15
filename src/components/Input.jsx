@@ -8,6 +8,8 @@
  *  - placeholder: string — testo placeholder (opzionale)
  *  - type: string — tipo input HTML (default: "text")
  *  - error: string — messaggio di errore (opzionale)
+ *  - disabled: boolean — campo disabilitato (passa readOnly automaticamente)
+ *  - ...rest — tutte le altre prop native dell'input
  */
 export default function Input({
   label,
@@ -16,6 +18,8 @@ export default function Input({
   placeholder = "",
   type = "text",
   error,
+  disabled = false,
+  ...rest
 }) {
   return (
     <fieldset className="fieldset">
@@ -27,7 +31,11 @@ export default function Input({
         value={value}
         onChange={onChange}
         placeholder={placeholder}
-        className={`input w-full ${error ? "input-error" : ""}`}
+        disabled={disabled}
+        // Se disabled senza onChange, aggiungi readOnly per evitare warning React
+        readOnly={disabled && !onChange}
+        className={`input w-full ${error ? "input-error" : ""} ${disabled ? "opacity-60 cursor-not-allowed" : ""}`}
+        {...rest}
       />
       {error && (
         <p className="fieldset-label text-error">{error}</p>

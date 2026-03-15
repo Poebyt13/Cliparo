@@ -92,6 +92,7 @@ export default function LoginPage() {
                   label={loading ? "Invio in corso…" : "Invia link di accesso"}
                   variant="primary"
                   className="w-full"
+                  type="submit"
                 />
               </form>
 

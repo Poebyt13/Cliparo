@@ -43,23 +43,41 @@ export async function POST(req) {
       process.env.STRIPE_WEBHOOK_SECRET
     );
   } catch (error) {
-    console.error("Firma webhook non valida:", error.message);
+    console.error("⚠️ Firma webhook non valida:", error.message);
     return NextResponse.json({ error: "Firma webhook non valida." }, { status: 400 });
   }
+
+  // Log evento ricevuto per debug
+  console.log(`\n🔔 Webhook ricevuto: ${event.type} (${event.id})`);
 
   try {
     await connectToDatabase();
 
     switch (event.type) {
-      // Checkout completato → collega stripeCustomerId all'utente (safety net)
+      // Checkout completato → collega stripeCustomerId + aggiorna abbonamento
       case "checkout.session.completed": {
         const checkoutSession = event.data.object;
-        if (checkoutSession.customer && checkoutSession.metadata?.userId) {
-          // Aggiorna solo se l'utente non ha ancora un customerId (idempotente)
+        const customerId = checkoutSession.customer;
+        const userId = checkoutSession.metadata?.userId;
+
+        console.log(`  checkout.session.completed → customer: ${customerId}, userId: ${userId}, subscriptionId: ${checkoutSession.subscription}`);
+
+        if (customerId && userId) {
+          // Collega stripeCustomerId se non ancora presente (safety net)
           await User.findOneAndUpdate(
-            { _id: checkoutSession.metadata.userId, stripeCustomerId: null },
-            { stripeCustomerId: checkoutSession.customer }
+            { _id: userId, stripeCustomerId: null },
+            { stripeCustomerId: customerId }
           );
+        }
+
+        // Se il checkout è per un abbonamento, aggiorna subito stato + subscriptionEnd
+        // (non aspettiamo customer.subscription.created che potrebbe non arrivare)
+        if (checkoutSession.subscription) {
+          const subscription = await stripe.subscriptions.retrieve(
+            checkoutSession.subscription
+          );
+          console.log(`  → subscription status: ${subscription.status}, current_period_end: ${subscription.current_period_end}`);
+          await updateUserSubscription(customerId, subscription.status, subscription);
         }
         break;
       }
@@ -67,31 +85,88 @@ export async function POST(req) {
       // Abbonamento creato o aggiornato
       case "customer.subscription.created":
       case "customer.subscription.updated": {
-        const subscription = event.data.object;
+        const subEvent = event.data.object;
+
+        console.log(`  ${event.type} → customer: ${subEvent.customer}, status: ${subEvent.status}, cancel_at_period_end: ${subEvent.cancel_at_period_end}, current_period_end: ${subEvent.current_period_end}`);
+
+        // Skip status che non richiedono azione:
+        // - incomplete / incomplete_expired: pagamento ancora in corso o fallito.
+        //   checkout.session.completed gestisce già l'attivazione con fetch esplicito.
+        // - canceled: gestito da customer.subscription.deleted.
+        if (["incomplete", "incomplete_expired", "canceled"].includes(subEvent.status)) {
+          console.log(`  → status '${subEvent.status}': skip`);
+          break;
+        }
+
+        // Il payload webhook spesso NON include current_period_end.
+        // Fetch la subscription completa dall'API Stripe per avere tutti i campi.
+        let subscription = subEvent;
+        if (!subEvent.current_period_end && subEvent.id) {
+          console.log("  → current_period_end mancante nel payload, recupero da Stripe API...");
+          subscription = await stripe.subscriptions.retrieve(subEvent.id);
+          console.log(`  → recuperata: status=${subscription.status}, current_period_end=${subscription.current_period_end}`);
+        }
+
         await updateUserSubscription(subscription.customer, subscription.status, subscription);
         break;
       }
 
-      // Abbonamento cancellato → downgrade a free + email di notifica
+      // Abbonamento cancellato da Stripe
       case "customer.subscription.deleted": {
-        const subscription = event.data.object;
-        const user = await updateUserSubscription(subscription.customer, "canceled", null);
+        const subEvent = event.data.object;
 
-        // Invia email di notifica scadenza
-        if (user?.email) {
-          const renewUrl = `${process.env.NEXTAUTH_URL || "http://localhost:3000"}/pricing`;
+        // Fetch completo se current_period_end manca nel payload
+        let subscription = subEvent;
+        if (!subEvent.current_period_end && subEvent.id) {
           try {
-            await sendEmail({
-              to: user.email,
-              subject: "Il tuo piano è scaduto",
-              react: SubscriptionExpiredEmail({
-                name: user.name,
-                plan: "premium",
-                renewUrl,
-              }),
-            });
-          } catch (err) {
-            console.error("Errore invio email scadenza:", err);
+            subscription = await stripe.subscriptions.retrieve(subEvent.id);
+          } catch {
+            // Se la subscription non esiste più su Stripe, usa il payload originale
+            subscription = subEvent;
+          }
+        }
+
+        const periodEnd = subscription.current_period_end
+          ? new Date(subscription.current_period_end * 1000)
+          : null;
+        // L'utente ha ancora tempo pagato se current_period_end è nel futuro
+        // (tolleranza di 60s per evitare race condition sui timestamp)
+        const hasRemainingTime = periodEnd && periodEnd > new Date(Date.now() - 60_000);
+
+        console.log(`  subscription.deleted → customer: ${subscription.customer}, current_period_end: ${subscription.current_period_end}, periodEnd: ${periodEnd?.toISOString()}, hasRemainingTime: ${hasRemainingTime}`);
+
+        let user;
+
+        if (hasRemainingTime) {
+          // L'utente ha già pagato il periodo corrente: manteniamo premium + subscriptionEnd.
+          // Il session callback gestirà il downgrade a free quando subscriptionEnd passa.
+          user = await User.findOneAndUpdate(
+            { stripeCustomerId: subscription.customer },
+            { subscriptionEnd: periodEnd },
+            { returnDocument: "after" }
+          );
+          console.log(`  → periodo ancora attivo: mantenuto premium fino a ${periodEnd.toISOString()}`);
+        } else {
+          // Periodo scaduto o nullo → downgrade immediato a free.
+          user = await updateUserSubscription(subscription.customer, "canceled", null);
+          console.log("  → periodo scaduto: downgrade a free");
+
+          // Invia email di notifica scadenza solo quando il piano è effettivamente finito
+          if (user?.email) {
+            const renewUrl = `${process.env.NEXTAUTH_URL || "http://localhost:3000"}/pricing`;
+            try {
+              await sendEmail({
+                to: user.email,
+                subject: "Il tuo piano è scaduto",
+                react: SubscriptionExpiredEmail({
+                  name: user.name,
+                  plan: "premium",
+                  renewUrl,
+                }),
+              });
+            } catch (err) {
+              console.error("Errore invio email scadenza:", err);
+            }
           }
         }
         break;
@@ -100,9 +175,11 @@ export async function POST(req) {
       // Pagamento della fattura andato a buon fine
       case "invoice.payment_succeeded": {
         const invoice = event.data.object;
+        console.log(`  invoice.payment_succeeded → customer: ${invoice.customer}, subscriptionId: ${invoice.subscription}`);
         if (invoice.subscription) {
           // Recupera la subscription aggiornata per avere current_period_end
           const subscription = await stripe.subscriptions.retrieve(invoice.subscription);
+          console.log(`  → subscription status: ${subscription.status}, current_period_end: ${subscription.current_period_end}`);
           await updateUserSubscription(invoice.customer, subscription.status, subscription);
         }
         break;
@@ -111,14 +188,19 @@ export async function POST(req) {
       // Pagamento della fattura fallito
       case "invoice.payment_failed": {
         const invoice = event.data.object;
+        console.log(`  invoice.payment_failed → customer: ${invoice.customer}, subscriptionId: ${invoice.subscription}`);
         if (invoice.subscription) {
-          await updateUserSubscription(invoice.customer, "past_due", null);
+          // Recupera la subscription per preservare current_period_end
+          // (NON passare null: causerebbe subscriptionEnd: null con status premium)
+          const subscription = await stripe.subscriptions.retrieve(invoice.subscription);
+          console.log(`  → subscription status: ${subscription.status}, current_period_end: ${subscription.current_period_end}`);
+          await updateUserSubscription(invoice.customer, subscription.status, subscription);
         }
         break;
       }
 
       default:
-        // Evento non gestito: ignora silenziosamente
+        console.log(`  → evento non gestito, ignorato`);
         break;
     }
 
@@ -131,6 +213,11 @@ export async function POST(req) {
 
 /**
  * Aggiorna lo stato dell'abbonamento e la data di scadenza dell'utente nel database.
+ *
+ * REGOLA CHIAVE: subscriptionEnd viene impostato a null SOLO quando lo status è "free".
+ * Se lo status è "premium"/"trial" ma non abbiamo una data, NON tocchiamo subscriptionEnd
+ * nel DB per evitare di sovrascrivere una data valida già presente.
+ *
  * @param {string} stripeCustomerId - ID cliente Stripe
  * @param {string} stripeStatus - Stato abbonamento restituito da Stripe
  * @param {object|null} subscription - Oggetto subscription Stripe (per current_period_end)
@@ -138,28 +225,37 @@ export async function POST(req) {
 async function updateUserSubscription(stripeCustomerId, stripeStatus, subscription) {
   const subscriptionStatus = SUBSCRIPTION_STATUS_MAP[stripeStatus] ?? "free";
 
-  // Calcola subscriptionEnd in base allo stato
-  let subscriptionEnd = null;
+  // Costruisce i campi da aggiornare — subscriptionEnd solo se abbiamo un valore certo
+  const updateData = { subscriptionStatus };
+
   if (subscriptionStatus === "premium" && subscription?.current_period_end) {
     // Premium: scadenza dal periodo Stripe (timestamp in secondi → millisecondi)
-    subscriptionEnd = new Date(subscription.current_period_end * 1000);
+    updateData.subscriptionEnd = new Date(subscription.current_period_end * 1000);
   } else if (subscriptionStatus === "trial" && subscription?.trial_end) {
-    // Trial: usa trial_end di Stripe se disponibile, altrimenti +15 giorni
-    subscriptionEnd = new Date(subscription.trial_end * 1000);
+    // Trial: usa trial_end di Stripe se disponibile
+    updateData.subscriptionEnd = new Date(subscription.trial_end * 1000);
   } else if (subscriptionStatus === "trial") {
     // Trial senza trial_end esplicito: fallback a 15 giorni da ora
-    subscriptionEnd = new Date(Date.now() + 15 * 24 * 60 * 60 * 1000);
+    updateData.subscriptionEnd = new Date(Date.now() + 15 * 24 * 60 * 60 * 1000);
+  } else if (subscriptionStatus === "free") {
+    // Free → esplicitamente null
+    updateData.subscriptionEnd = null;
   }
-  // Free → subscriptionEnd rimane null
+  // Se premium/trial ma senza data disponibile → NON tocchiamo subscriptionEnd
+  // (preserva il valore esistente nel DB)
+
+  console.log(`  📝 updateUserSubscription → customer: ${stripeCustomerId}, stripeStatus: "${stripeStatus}" → mapped: "${subscriptionStatus}", subscriptionEnd: ${updateData.subscriptionEnd !== undefined ? (updateData.subscriptionEnd?.toISOString() ?? "null") : "(invariato)"}`);
 
   const user = await User.findOneAndUpdate(
     { stripeCustomerId },
-    { subscriptionStatus, subscriptionEnd },
+    updateData,
     { returnDocument: "after" }
   );
 
   if (!user) {
-    console.warn(`Utente con stripeCustomerId ${stripeCustomerId} non trovato.`);
+    console.warn(`  ⚠️ Utente con stripeCustomerId ${stripeCustomerId} non trovato.`);
+  } else {
+    console.log(`  ✅ DB aggiornato → status: "${user.subscriptionStatus}", end: ${user.subscriptionEnd?.toISOString() ?? "null"}`);
   }
 
   return user;

@@ -1,0 +1,92 @@
+import { NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+import connectToDatabase from "@/lib/mongodb";
+import User from "@/models/User";
+import path from "path";
+import { writeFile } from "fs/promises";
+
+// Tipi MIME accettati per le immagini
+const ALLOWED_TYPES = ["image/jpeg", "image/png"];
+const MAX_NAME_LENGTH = 255;
+const MAX_IMAGE_SIZE = 2 * 1024 * 1024; // 2MB
+
+/**
+ * PATCH /api/user/profile
+ * Aggiorna nome e/o immagine profilo dell'utente autenticato.
+ * Accetta multipart/form-data con campi "name" e "image" (file opzionale).
+ */
+export async function PATCH(req) {
+  // Verifica autenticazione
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.email) {
+    return NextResponse.json({ error: "Non autorizzato." }, { status: 401 });
+  }
+
+  try {
+    const formData = await req.formData();
+    const name = formData.get("name");
+    const imageFile = formData.get("image");
+
+    // ── Validazione name ──
+    if (!name || typeof name !== "string" || name.trim().length === 0) {
+      return NextResponse.json({ error: "Il nome è obbligatorio." }, { status: 400 });
+    }
+    if (name.trim().length > MAX_NAME_LENGTH) {
+      return NextResponse.json(
+        { error: `Il nome non può superare ${MAX_NAME_LENGTH} caratteri.` },
+        { status: 400 }
+      );
+    }
+
+    await connectToDatabase();
+
+    const updateFields = { name: name.trim() };
+
+    // ── Gestione upload immagine (opzionale) ──
+    if (imageFile && typeof imageFile !== "string" && imageFile.size > 0) {
+      if (!ALLOWED_TYPES.includes(imageFile.type)) {
+        return NextResponse.json(
+          { error: "Formato immagine non valido. Usa JPG o PNG." },
+          { status: 400 }
+        );
+      }
+
+      if (imageFile.size > MAX_IMAGE_SIZE) {
+        return NextResponse.json(
+          { error: "Immagine troppo grande. Massimo 2MB." },
+          { status: 400 }
+        );
+      }
+
+      const ext = imageFile.type === "image/png" ? "png" : "jpg";
+      const userId = session.user.id;
+      const fileName = `${Date.now()}-${userId}.${ext}`;
+
+      const bytes = await imageFile.arrayBuffer();
+      const buffer = Buffer.from(bytes);
+      const uploadPath = path.join(process.cwd(), "public", "uploads", fileName);
+      await writeFile(uploadPath, buffer);
+
+      updateFields.image = `/uploads/${fileName}`;
+    }
+
+    const updatedUser = await User.findOneAndUpdate(
+      { email: session.user.email },
+      { $set: updateFields },
+      { returnDocument: "after" }
+    );
+
+    if (!updatedUser) {
+      return NextResponse.json({ error: "Utente non trovato." }, { status: 404 });
+    }
+
+    return NextResponse.json({
+      ok: true,
+      user: { name: updatedUser.name, image: updatedUser.image },
+    });
+  } catch (error) {
+    console.error("Errore aggiornamento profilo:", error);
+    return NextResponse.json({ error: "Errore interno del server." }, { status: 500 });
+  }
+}

@@ -203,8 +203,10 @@ export default function SetupProfilePage() {
             {/* Pulsante conferma */}
             <Button
               label={loading ? "Salvataggio..." : "Continua"}
+              type="submit"
               variant="primary"
               className="w-full"
+              disabled={loading}
             />
           </form>
         </Card>

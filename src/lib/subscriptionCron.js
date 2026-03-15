@@ -40,6 +40,9 @@ export async function checkSubscriptions() {
   }).lean();
 
   for (const user of expiringUsers) {
+    // Rispetta la preferenza dell'utente: salta se ha disattivato le notifiche
+    if (user.notificationEmails === false) continue;
+
     try {
       await sendEmail({
         to: user.email,

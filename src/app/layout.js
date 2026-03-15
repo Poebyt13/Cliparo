@@ -1,6 +1,8 @@
 import { Inter, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import SessionProviderWrapper from "@/components/SessionProviderWrapper";
+import { Toaster } from "sonner";
+import seoConfig from "@/config/seo";
 
 const geistSans = Inter({
   variable: "--font-sans",
@@ -13,8 +15,27 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "SaaS Boilerplate",
-  description: "SaaS boilerplate con Next.js, DaisyUI e Tailwind CSS",
+  title: {
+    default: seoConfig.defaultTitle,
+    template: seoConfig.titleTemplate,
+  },
+  description: seoConfig.description,
+  openGraph: {
+    title: seoConfig.defaultTitle,
+    description: seoConfig.description,
+    url: seoConfig.url,
+    siteName: seoConfig.defaultTitle,
+    images: [{ url: seoConfig.ogImage, width: 1200, height: 630 }],
+    locale: seoConfig.locale,
+    type: seoConfig.type,
+  },
+  twitter: {
+    card: seoConfig.twitterCard,
+    title: seoConfig.defaultTitle,
+    description: seoConfig.description,
+    images: [seoConfig.ogImage],
+  },
+  metadataBase: new URL(seoConfig.url),
 };
 
 /**
@@ -33,6 +54,7 @@ export default function RootLayout({ children }) {
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <SessionProviderWrapper>{children}</SessionProviderWrapper>
+        <Toaster richColors position="top-right" />
       </body>
     </html>
   );

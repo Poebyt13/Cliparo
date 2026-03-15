@@ -7,6 +7,7 @@
  *  - href: string — se fornito, renderizza come <a> per la navigazione
  *  - variant: "primary" | "secondary" | "accent" | "outline" — stile cromatico (default: "primary")
  *  - className: string — classi aggiuntive
+ * * type: "button" | "submit" | "reset" — tipo del button (default: "button")
  */
 export default function Button({
   label,
@@ -14,6 +15,9 @@ export default function Button({
   href,
   variant = "primary",
   className = "",
+  disabled = false,
+  type = "button",
+  ...rest
 }) {
   // Mappa variante → classe DaisyUI
   const variantClass = {
@@ -21,6 +25,8 @@ export default function Button({
     secondary: "btn-secondary",
     accent: "btn-accent",
     outline: "btn-outline",
+    error: "btn-error",
+    ghost: "btn-ghost",
   }[variant] ?? "btn-primary";
 
   const baseClass = `btn ${variantClass} ${className}`;
@@ -35,7 +41,7 @@ export default function Button({
   }
 
   return (
-    <button onClick={onClick} className={baseClass}>
+    <button type={type} onClick={onClick} className={baseClass} disabled={disabled} {...rest}>
       {label}
     </button>
   );

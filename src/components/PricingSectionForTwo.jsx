@@ -149,13 +149,23 @@ export default function PricingSectionForTwo({
 
                 {/* CTA */}
                 {plan.cta && (
-                  <a href={plan.cta.href} className="w-full">
+                  plan.cta.onClick ? (
                     <Button
                       label={plan.cta.label}
+                      onClick={plan.cta.onClick}
                       variant="primary"
+                      disabled={plan.cta.disabled}
                       className="w-full font-bold tracking-widest uppercase"
                     />
-                  </a>
+                  ) : (
+                    <a href={plan.cta.href} className="w-full">
+                      <Button
+                        label={plan.cta.label}
+                        variant="primary"
+                        className="w-full font-bold tracking-widest uppercase"
+                      />
+                    </a>
+                  )
                 )}
               </div>
             ))}

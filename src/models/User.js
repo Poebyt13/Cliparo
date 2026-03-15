@@ -59,6 +59,20 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+
+    // ── Preferenze email ──
+
+    // Ricevi email di notifica (scadenza piano, aggiornamenti account)
+    notificationEmails: {
+      type: Boolean,
+      default: true,
+    },
+
+    // Ricevi email promozionali (offerte, novità)
+    marketingEmails: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     // Aggiunge automaticamente createdAt e updatedAt
