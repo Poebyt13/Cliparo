@@ -4,6 +4,7 @@ import { authOptions } from "@/lib/auth";
 import stripe from "@/lib/stripe";
 import connectToDatabase from "@/lib/mongodb";
 import User from "@/models/User";
+import { applyRateLimit, checkoutLimiter } from "@/lib/ratelimit";
 
 /**
  * POST /api/stripe/checkout
@@ -11,6 +12,10 @@ import User from "@/models/User";
  * Richiede sessione autenticata.
  */
 export async function POST(req) {
+  // Rate limiting: 5 req/min
+  const rateLimitResponse = await applyRateLimit(req, checkoutLimiter, "checkout");
+  if (rateLimitResponse) return rateLimitResponse;
+
   // Verifica che l'utente sia autenticato
   const session = await getServerSession(authOptions);
   if (!session?.user?.email) {
@@ -51,7 +56,7 @@ export async function POST(req) {
       payment_method_types: ["card"],
       line_items: [{ price: priceId, quantity: 1 }],
       success_url: `${process.env.NEXTAUTH_URL}/dashboard?checkout=success`,
-      cancel_url: `${process.env.NEXTAUTH_URL}/pricing?checkout=cancelled`,
+      cancel_url: `${process.env.NEXTAUTH_URL}/#pricing?checkout=cancelled`,
       metadata: {
         userId: user._id.toString(),
       },

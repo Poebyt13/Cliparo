@@ -3,12 +3,16 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import connectToDatabase from "@/lib/mongodb";
 import User from "@/models/User";
+import { applyRateLimit, standardLimiter } from "@/lib/ratelimit";
 
 /**
  * GET /api/user/settings
  * Restituisce le preferenze email dell'utente.
  */
-export async function GET() {
+export async function GET(req) {
+  const rateLimitResponse = await applyRateLimit(req, standardLimiter, "settings");
+  if (rateLimitResponse) return rateLimitResponse;
+
   const session = await getServerSession(authOptions);
   if (!session?.user?.email) {
     return NextResponse.json({ error: "Non autorizzato." }, { status: 401 });
@@ -35,6 +39,9 @@ export async function GET() {
  * Body: { notificationEmails?: boolean, marketingEmails?: boolean }
  */
 export async function PATCH(req) {
+  const rateLimitResponse = await applyRateLimit(req, standardLimiter, "settings");
+  if (rateLimitResponse) return rateLimitResponse;
+
   const session = await getServerSession(authOptions);
   if (!session?.user?.email) {
     return NextResponse.json({ error: "Non autorizzato." }, { status: 401 });

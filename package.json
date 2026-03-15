@@ -12,6 +12,8 @@
     "@auth/mongodb-adapter": "^3.11.1",
     "@react-email/components": "^1.0.8",
     "@react-email/render": "^2.0.4",
+    "@upstash/ratelimit": "^2.0.8",
+    "@upstash/redis": "^1.37.0",
     "daisyui": "^5.5.19",
     "mongoose": "^9.2.4",
     "next": "16.1.6",

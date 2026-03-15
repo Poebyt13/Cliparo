@@ -4,13 +4,17 @@ import { authOptions } from "@/lib/auth";
 import stripe from "@/lib/stripe";
 import connectToDatabase from "@/lib/mongodb";
 import User from "@/models/User";
+import { applyRateLimit, standardLimiter } from "@/lib/ratelimit";
 
 /**
  * POST /api/stripe/portal
  * Crea una sessione Stripe Customer Portal per gestire l'abbonamento.
  * L'utente viene redirectato al portal dove può cambiare piano, carta o cancellare.
  */
-export async function POST() {
+export async function POST(req) {
+  const rateLimitResponse = await applyRateLimit(req, standardLimiter, "portal");
+  if (rateLimitResponse) return rateLimitResponse;
+
   const session = await getServerSession(authOptions);
   if (!session?.user?.email) {
     return NextResponse.json({ error: "Non autorizzato." }, { status: 401 });

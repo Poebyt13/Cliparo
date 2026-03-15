@@ -4,13 +4,17 @@ import { authOptions } from "@/lib/auth";
 import stripe from "@/lib/stripe";
 import connectToDatabase from "@/lib/mongodb";
 import User from "@/models/User";
+import { applyRateLimit, standardLimiter } from "@/lib/ratelimit";
 
 /**
  * GET /api/stripe/invoices
  * Restituisce le ultime fatture Stripe dell'utente autenticato.
  * Ritorna un array di oggetti con: id, date, amount, currency, status, pdfUrl.
  */
-export async function GET() {
+export async function GET(req) {
+  const rateLimitResponse = await applyRateLimit(req, standardLimiter, "invoices");
+  if (rateLimitResponse) return rateLimitResponse;
+
   const session = await getServerSession(authOptions);
   if (!session?.user?.email) {
     return NextResponse.json({ error: "Non autorizzato." }, { status: 401 });

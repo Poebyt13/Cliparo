@@ -5,6 +5,7 @@ import connectToDatabase from "@/lib/mongodb";
 import User from "@/models/User";
 import path from "path";
 import { writeFile } from "fs/promises";
+import { applyRateLimit, standardLimiter } from "@/lib/ratelimit";
 
 // Tipi MIME accettati per le immagini
 const ALLOWED_TYPES = ["image/jpeg", "image/png"];
@@ -17,6 +18,9 @@ const MAX_IMAGE_SIZE = 2 * 1024 * 1024; // 2MB
  * Accetta multipart/form-data con campi "name" e "image" (file).
  */
 export async function POST(req) {
+  const rateLimitResponse = await applyRateLimit(req, standardLimiter, "setup-profile");
+  if (rateLimitResponse) return rateLimitResponse;
+
   // Verifica autenticazione
   const session = await getServerSession(authOptions);
   if (!session?.user?.email) {

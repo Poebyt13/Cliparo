@@ -7,6 +7,7 @@ import stripe from "@/lib/stripe";
 import { sendEmail } from "@/lib/resend";
 import AccountDeletedEmail from "@/emails/accountDeleted";
 import mongoose from "mongoose";
+import { applyRateLimit, destructiveLimiter } from "@/lib/ratelimit";
 
 /**
  * DELETE /api/user/account
@@ -19,7 +20,10 @@ import mongoose from "mongoose";
  * Operazioni: rimuove user, sessions, accounts da MongoDB,
  * elimina il customer da Stripe se presente, e invia email di conferma.
  */
-export async function DELETE() {
+export async function DELETE(req) {
+  const rateLimitResponse = await applyRateLimit(req, destructiveLimiter, "delete-account");
+  if (rateLimitResponse) return rateLimitResponse;
+
   const session = await getServerSession(authOptions);
   if (!session?.user?.email) {
     return NextResponse.json({ error: "Non autorizzato." }, { status: 401 });
