@@ -21,8 +21,11 @@ export default function BillingPage() {
   const planEnd = session?.user?.subscriptionEnd
     ? new Date(session.user.subscriptionEnd)
     : null;
-  const hasStripeCustomer = !!session?.user?.stripeCustomerId;
   const cancelAtPeriodEnd = session?.user?.cancelAtPeriodEnd ?? false;
+  // Mostra "Gestisci piano" solo se ha un abbonamento attivo (non free).
+  // stripeCustomerId può esistere anche dopo un checkout abbandonato, quindi
+  // non basta controllare quello — serve che il piano sia effettivamente attivo.
+  const canManagePlan = plan !== "free" && !!session?.user?.stripeCustomerId;
 
   // Carica le fatture
   useEffect(() => {
@@ -121,8 +124,8 @@ export default function BillingPage() {
             </div>
           </div>
 
-          {/* CTA: portal se ha customer, altrimenti pricing */}
-          {hasStripeCustomer ? (
+          {/* CTA: portal se ha piano attivo, altrimenti pricing */}
+          {canManagePlan ? (
             <Button
               label={loadingPortal ? "Apertura..." : "Gestisci piano"}
               onClick={handleManagePlan}

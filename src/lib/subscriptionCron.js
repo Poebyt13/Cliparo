@@ -9,6 +9,9 @@ const WARNING_DAYS = 3;
 // URL di rinnovo (pagina pricing del sito)
 const RENEW_URL = `${process.env.NEXTAUTH_URL || "http://localhost:3000"}/pricing`;
 
+// URL gestione abbonamento (dashboard billing → apre il Stripe portal)
+const MANAGE_URL = `${process.env.NEXTAUTH_URL || "http://localhost:3000"}/dashboard/billing`;
+
 /**
  * Controlla gli abbonamenti in scadenza e invia l'avviso.
  *
@@ -46,12 +49,16 @@ export async function checkSubscriptions() {
     try {
       await sendEmail({
         to: user.email,
-        subject: `Il tuo piano scade tra ${WARNING_DAYS} giorni`,
+        subject: user.cancelAtPeriodEnd
+          ? `Il tuo piano scade tra ${WARNING_DAYS} giorni`
+          : `Il tuo piano si rinnova tra ${WARNING_DAYS} giorni`,
         react: SubscriptionExpiringEmail({
           name: user.name,
           plan: user.subscriptionStatus,
           daysLeft: WARNING_DAYS,
           renewUrl: RENEW_URL,
+          manageUrl: MANAGE_URL,
+          cancelAtPeriodEnd: user.cancelAtPeriodEnd ?? false,
         }),
       });
       results.warned.push(user.email);
