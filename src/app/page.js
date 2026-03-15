@@ -1,15 +1,16 @@
 "use client";
 
+import { useState } from "react";
 import { useSession, signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import Navbar from "@/components/Navbar";
 import HowItWorksSection from "@/components/HowItWorksSection";
-import PricingSection from "@/components/PricingSection";
 import PricingSectionForTwo from "@/components/PricingSectionForTwo";
 import Card from "@/components/Card";
 import Button from "@/components/Button";
 import Footer from "@/components/Footer";
 import FaqSectionAlt from "@/components/FaqSectionAlt";
-import FaqSection from "@/components/FaqSection";
 import CallToActionSection from "@/components/CallToActionSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import SocialProof from "@/components/SocialProof";
@@ -159,8 +160,38 @@ const EXPLAIN_IN_DAYS_STEPS = [
   { title: "Day 14", description: "Launch your idea!", image: day4 },
 ];
 
+/*
+ * ── Configurazione piani ──
+ * Sostituisci i priceId con quelli reali dal tuo Stripe Dashboard:
+ * Dashboard → Products → seleziona prodotto → copia il Price ID (price_xxx)
+ *
+ * In Stripe Test Mode puoi usare la carta: 4242 4242 4242 4242
+ */
+const PLANS = [
+  {
+    name: "Pro Mensile",
+    oldPrice: null,
+    price: "€9",
+    currency: "/mese",
+    description: "Fatturazione mensile, cancella quando vuoi.",
+    priceId: process.env.NEXT_PUBLIC_STRIPE_PRICE_MONTHLY || "",
+    popular: false,
+  },
+  {
+    name: "Pro Annuale",
+    oldPrice: "€108",
+    price: "€79",
+    currency: "/anno",
+    description: "Risparmia il 27%. Fatturazione annuale.",
+    priceId: process.env.NEXT_PUBLIC_STRIPE_PRICE_YEARLY || "",
+    popular: true,
+  },
+];
+
 export default function Home() {
   const { data: session, status } = useSession();
+  const router = useRouter();
+  const [loadingPlan, setLoadingPlan] = useState(null);
 
   // Finché la sessione è in caricamento, non mostrare né CTA né userMenu per evitare il flash
   const navCta = status === "unauthenticated" ? { label: "Inizia gratis", href: "/auth/signin" } : null;
@@ -172,6 +203,44 @@ export default function Home() {
         onLogout: () => signOut(),
       }
     : null;
+
+  async function handleCheckout(priceId) {
+    if (!session) {
+      router.push("/auth/signin");
+      return;
+    }
+    if (!priceId) {
+      toast.error("Price ID non configurato. Controlla le variabili ambiente.");
+      return;
+    }
+    setLoadingPlan(priceId);
+    try {
+      const res = await fetch("/api/stripe/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ priceId }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        toast.error(data.error || "Errore nella creazione del checkout.");
+        return;
+      }
+      window.location.href = data.url;
+    } catch {
+      toast.error("Errore di rete. Riprova.");
+    } finally {
+      setLoadingPlan(null);
+    }
+  }
+
+  const plansWithCta = PLANS.map((plan) => ({
+    ...plan,
+    cta: {
+      label: loadingPlan === plan.priceId ? "Caricamento..." : "Abbonati ora",
+      onClick: () => handleCheckout(plan.priceId),
+      disabled: loadingPlan !== null,
+    },
+  }));
 
   return (
     <div className="min-h-screen bg-base-100 flex flex-col">
@@ -252,11 +321,10 @@ export default function Home() {
 
       {/* ── Pricing ── */}
       <section id="pricing">
-        {/* <PricingSection /> */}
         <PricingSectionForTwo
-          title="Build your SaaS for free"
-          subtitle="Get the lifetime deal when you're ready to launch it to the world!"
-          featuresTitle="Showcase your startups"
+          title="Scegli il tuo piano"
+          subtitle="Inizia gratis, passa a Pro quando sei pronto."
+          featuresTitle="Cosa include Pro"
           features={[
             "Auth con Google e Magic link",
             "Pagamenti Stripe preconfigurati",
@@ -266,26 +334,7 @@ export default function Home() {
             "Componenti UI riusabili",
             "Deploy-ready su Vercel",
           ]}
-          plans={[
-            {
-              name: "1-Year Pass",
-              oldPrice: "$55",
-              price: "$25",
-              currency: "USD",
-              description: "One-time payment. No subscription",
-              cta: { label: "Start for free", href: "/auth/signin" },
-              popular: false,
-            },
-            {
-              name: "Lifetime Deal",
-              oldPrice: "$75",
-              price: "$45",
-              currency: "USD",
-              description: "One-time payment. No subscription",
-              cta: { label: "Start for free", href: "/api/stripe/checkout" },
-              popular: true,
-            },
-          ]}
+          plans={plansWithCta}
         />
       </section>
 
