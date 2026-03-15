@@ -73,7 +73,7 @@ code, kbd, pre, samp {
   /* ── Colori semantici ───────────────────────────────────── */
   --color-info:            oklch(70% 0.20 220);  /* azzurro info    */
   --color-info-content:    oklch(16% 0.02 220);
-  --color-success:         oklch(0.698 0.1617 158.56);  /* verde successo  */
+  --color-success:         oklch(65% 0.25 140);  /* verde successo  */
   --color-success-content: oklch(16% 0.02 140);
   --color-warning:         oklch(0.7927 0.171 70.67);   /* arancio warning */
   --color-warning-content: oklch(16% 0.02 60);
