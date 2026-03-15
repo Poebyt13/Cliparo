@@ -54,6 +54,12 @@ const userSchema = new mongoose.Schema(
       default: null,
     },
 
+    // True quando l'utente ha cancellato via Stripe portal ma il periodo è ancora attivo
+    cancelAtPeriodEnd: {
+      type: Boolean,
+      default: false,
+    },
+
     // Flag: true ad ogni login, false dopo che l'utente completa /setup-profile
     profileSetupPending: {
       type: Boolean,

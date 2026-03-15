@@ -128,6 +128,7 @@ export default function ProfilePage() {
                   src={preview}
                   alt="Foto profilo"
                   className="w-full h-full object-cover"
+                  referrerPolicy="no-referrer"
                 />
               ) : (
                 <svg

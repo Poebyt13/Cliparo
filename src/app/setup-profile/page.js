@@ -146,6 +146,7 @@ export default function SetupProfilePage() {
                     src={preview}
                     alt="Anteprima"
                     className="w-full h-full object-cover"
+                    referrerPolicy="no-referrer"
                   />
                 ) : (
                   <svg

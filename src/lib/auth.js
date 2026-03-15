@@ -120,10 +120,11 @@ export const authOptions = {
      * Controlla anche se l'abbonamento è scaduto e fa il downgrade a free.
      */
     async session({ session, user }) {
-      session.user.id              = user.id;
-      session.user.subscriptionEnd = user.subscriptionEnd ?? null;
-      session.user.stripeCustomerId = user.stripeCustomerId ?? null;
-      session.user.needsSetup      = !!user.profileSetupPending;
+      session.user.id                = user.id;
+      session.user.subscriptionEnd   = user.subscriptionEnd ?? null;
+      session.user.stripeCustomerId  = user.stripeCustomerId ?? null;
+      session.user.needsSetup        = !!user.profileSetupPending;
+      session.user.cancelAtPeriodEnd = user.cancelAtPeriodEnd ?? false;
 
       // Controlla se l'abbonamento è scaduto (trial o premium con data passata)
       const isExpired =
@@ -135,11 +136,12 @@ export const authOptions = {
         // Restituisce "free" nella sessione e aggiorna il DB in background
         session.user.subscriptionStatus = "free";
         session.user.subscriptionEnd    = null;
+        session.user.cancelAtPeriodEnd  = false;
 
         connectToDatabase()
           .then(() =>
             User.findByIdAndUpdate(user.id, {
-              $set: { subscriptionStatus: "free", subscriptionEnd: null },
+              $set: { subscriptionStatus: "free", subscriptionEnd: null, cancelAtPeriodEnd: false },
             })
           )
           .catch((err) => console.error("Errore nel downgrade abbonamento:", err));

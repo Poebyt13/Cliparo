@@ -142,7 +142,7 @@ export async function POST(req) {
           // Il session callback gestirà il downgrade a free quando subscriptionEnd passa.
           user = await User.findOneAndUpdate(
             { stripeCustomerId: subscription.customer },
-            { subscriptionEnd: periodEnd },
+            { subscriptionEnd: periodEnd, cancelAtPeriodEnd: false },
             { returnDocument: "after" }
           );
           console.log(`  → periodo ancora attivo: mantenuto premium fino a ${periodEnd.toISOString()}`);
@@ -227,6 +227,9 @@ async function updateUserSubscription(stripeCustomerId, stripeStatus, subscripti
 
   // Costruisce i campi da aggiornare — subscriptionEnd solo se abbiamo un valore certo
   const updateData = { subscriptionStatus };
+
+  // Salva il flag cancel_at_period_end (utente ha cancellato ma periodo ancora attivo)
+  updateData.cancelAtPeriodEnd = subscription?.cancel_at_period_end === true;
 
   if (subscriptionStatus === "premium" && subscription?.current_period_end) {
     // Premium: scadenza dal periodo Stripe (timestamp in secondi → millisecondi)

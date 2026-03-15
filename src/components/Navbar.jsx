@@ -98,7 +98,7 @@ export default function Navbar({ links = [], cta, userMenu, loading = false }) {
             >
               {userMenu.image ? (
                 <div className="w-9 h-9 rounded-full overflow-hidden">
-                  <img src={userMenu.image} alt={userMenu.label} />
+                  <img src={userMenu.image} alt={userMenu.label} referrerPolicy="no-referrer" />
                 </div>
               ) : (
                 <div className="bg-neutral text-neutral-content w-9 rounded-full flex items-center justify-center">

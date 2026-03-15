@@ -22,6 +22,7 @@ export default function BillingPage() {
     ? new Date(session.user.subscriptionEnd)
     : null;
   const hasStripeCustomer = !!session?.user?.stripeCustomerId;
+  const cancelAtPeriodEnd = session?.user?.cancelAtPeriodEnd ?? false;
 
   // Carica le fatture
   useEffect(() => {
@@ -77,6 +78,29 @@ export default function BillingPage() {
         </p>
       </div>
 
+      {/* Alert: abbonamento non si rinnova */}
+      {cancelAtPeriodEnd && planEnd && (
+        <div role="alert" className="alert alert-warning max-w-2xl">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+          </svg>
+          <div>
+            <p className="font-semibold">Rinnovo automatico disattivato</p>
+            <p className="text-sm">
+              Il tuo piano rimarrà attivo fino al{" "}
+              <strong>
+                {planEnd.toLocaleDateString("it-IT", {
+                  day: "2-digit",
+                  month: "long",
+                  year: "numeric",
+                })}
+              </strong>
+              , poi passerà automaticamente al piano gratuito.
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* Card piano attuale */}
       <Card className="max-w-2xl">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -86,7 +110,7 @@ export default function BillingPage() {
               <span className={`badge ${badgeClass}`}>{plan}</span>
               {planEnd && (
                 <span className="text-sm text-base-content/60">
-                  scade il{" "}
+                  {cancelAtPeriodEnd ? "attivo fino al" : "scade il"}{" "}
                   {planEnd.toLocaleDateString("it-IT", {
                     day: "2-digit",
                     month: "long",
