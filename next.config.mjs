@@ -4,6 +4,10 @@ const nextConfig = {
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "lh3.googleusercontent.com" },
+      // Cloudflare R2 — decommentare e inserire il proprio dominio
+      //{ protocol: "https", hostname: "cdn.example.com" },
+      // Oppure per R2.dev: 
+      { protocol: "https", hostname: "*.r2.dev" },
     ],
   },
 
