@@ -8,12 +8,16 @@ Panoramica dei costi di ogni tecnologia/servizio usato nel progetto, con dettagl
 
 | Servizio | Piano gratuito | Quando costa |
 |----------|---------------|--------------|
-| **Vercel** | Hobby plan illimitato | Da $20/mese (Pro) se usi per business o team |
-| **MongoDB Atlas** | 512MB storage, forever free | Da $9/mese (M10) se superi 512MB o vuoi replica set |
+| **Vercel** | Hobby (progetti personali) | Da $20/mese (Pro) per SaaS commerciali |
+| **MongoDB Atlas** | 512MB storage, forever free | Da ~$9/mese (M2) se superi 512MB |
 | **Cloudflare R2** | 10GB storage, 1M operazioni/mese | Pay-as-you-go oltre i limiti |
 | **Upstash Redis** | 10.000 comandi/giorno, 256MB | Pay-as-you-go oltre i limiti |
 | **Resend** | 100 email/giorno, 3.000/mese | Da $20/mese (50.000 email/mese) |
-| **Stripe** | Nessun costo fisso | 1.5% + €0.25 per transazione (carte EU) |
+| **Stripe** | Nessun costo fisso | 1.4% + €0.25 per transazione (carte EU) |
+| **Dominio** | — | ~$10–12/anno (.com) |
+| **PostHog** | 1M eventi/mese | Pay-as-you-go oltre il limite |
+| **Google Analytics** | Gratuito per sempre | — |
+| **Sentry** | ~5.000 errori/mese | Da $26/mese (Pro) |
 | **Next.js / React** | Open source, gratuito per sempre | — |
 | **NextAuth** | Open source, gratuito per sempre | — |
 | **TailwindCSS / DaisyUI** | Open source, gratuito per sempre | — |
@@ -25,19 +29,19 @@ Panoramica dei costi di ogni tecnologia/servizio usato nel progetto, con dettagl
 
 **Costo:** Gratuito (Hobby) → $20/mese (Pro)
 
-Il piano **Hobby** è gratuito per sempre e copre tutti i progetti personali:
+Il piano **Hobby** è gratuito per sempre, ma è pensato esclusivamente per progetti personali e sperimentazione:
 - Deployment illimitati
 - 100GB di bandwidth/mese
 - Edge Functions
 - Cron Jobs (fino a 2)
 - Preview Deployments
 
-Diventa necessario passare a **Pro** ($20/mese) quando:
-- Usi il progetto per scopi commerciali (la Vercel Fair Use Policy lo richiede)
-- Hai un team (più collaboratori sullo stesso progetto)
-- Hai bisogno di più di 1.000 GB di bandwidth, o staging environments
+Per un **SaaS commerciale** il piano corretto è **Pro ($20/mese)**:
+- I Terms of Service di Vercel richiedono Pro per uso commerciale
+- Sblocca limiti più alti di bandwidth, build minutes e team collaboration
+- Aggiunge staging environments e protezione password per i preview
 
-> Per un progetto personale o early-stage SaaS: **Hobby va benissimo**.
+> **Strategia consigliata:** Hobby nelle primissime fasi di sviluppo/testing, poi passa a Pro prima del lancio pubblico.
 
 ---
 
@@ -51,12 +55,12 @@ Il cluster **M0** è gratuito per sempre:
 - Una sola regione
 - Nessuna replica set (ma i dati sono comunque al sicuro)
 
-Superate le esigenze base:
-- **M2**: $9/mese — 2GB storage, connessioni dedicate
-- **M5**: $25/mese — 5GB storage
-- **M10**: $57/mese — 10GB, replica set, backups automatici
+Superate le esigenze base (prezzi indicativi, variano per regione):
+- **M2**: ~$9/mese — 2GB storage, connessioni dedicate
+- **M5**: ~$25/mese — 5GB storage
+- **M10**: ~$57/mese — 10GB, replica set, backups automatici
 
-> Con 512MB puoi gestire facilmente migliaia di utenti. Il limite lo raggiungi solo con grandi volumi di dati per utente.
+> Con 512MB puoi gestire facilmente migliaia di utenti. Il limite lo raggiungi solo con grandi volumi di dati per utente (file, logs, etc.). Per un SaaS con dati strutturati il free tier dura a lungo.
 
 ---
 
@@ -119,14 +123,82 @@ Piani a pagamento:
 
 **Costo:** Nessun costo fisso → Commissione per transazione
 
-Stripe non ha canoni mensili. Si paga solo sulle transazioni:
-- **1.5% + €0.25** per carte europee standard
-- **2.9% + €0.30** per carte non europee
-- +1.5% per carte emesse fuori dall'EEA
+Stripe non ha canoni mensili né costi di attivazione. Si paga solo sulle transazioni andate a buon fine:
+- **1.4% + €0.25** per carte europee standard
+- **2.9% + €0.25** per carte non europee
+- +1.5% per carte emesse fuori dall'EEA o con autenticazione aggiuntiva
 
-**Vantaggi:** Nessun rischio, paghi solo quando guadagni. Ideale per SaaS early-stage.
+**Vantaggi:** Zero rischi iniziali, paghi solo quando guadagni. Ideale per SaaS early-stage.
 
 > Ricorda di configurare il webhook su Stripe Dashboard per ogni ambiente (staging e produzione). Vedi `docs/deployment.md`.
+
+---
+
+## Dominio
+
+**Costo:** ~$10–12/anno per un dominio `.com`
+
+Una voce spesso dimenticata nel budget iniziale. Per un SaaS è praticamente obbligatorio avere un dominio dedicato.
+
+Registrar consigliati:
+- **Namecheap** — scelta più comune, interfaccia semplice, prezzi competitivi (~$10–11/anno)
+- **Cloudflare Domains** — costo al netto (nessun markup), DNS gratuito con Cloudflare
+- **Porkbun** — prezzi molto bassi, buona UX
+
+> **Consiglio:** Se usi già Cloudflare per R2, ha senso gestire anche il dominio lì per avere DNS e CDN in un unico posto.
+
+---
+
+## PostHog
+
+**Costo:** Gratuito fino al limite → Pay-as-you-go
+
+PostHog è uno strumento di **product analytics** open source: traccia come gli utenti usano l'app (eventi, funnel, session recording, feature flags).
+
+Il piano **Free** include:
+- **1 milione di eventi/mese** (si resetta ogni mese)
+- Session recordings illimitati (fino a 5.000/mese nel free)
+- Feature flags
+- Self-hosting disponibile (zero costi se gestisci il tuo server)
+
+Oltre il free tier:
+- Pay-as-you-go: circa $0.00031 per evento aggiuntivo
+- Molto economico anche a volumi alti
+
+> Ideale per capire quale % degli utenti completa l'onboarding, quanti usano ogni feature, dove abbandonano il funnel.
+
+---
+
+## Google Analytics
+
+**Costo:** Gratuito per sempre
+
+Google Analytics 4 (GA4) è lo standard per il **traffic analytics** del sito marketing: visite, sorgenti di traffico, conversioni, bounce rate.
+
+- Completamente gratuito
+- Nessun limite di volume pratico per SaaS di piccole/medie dimensioni
+- Si integra in Next.js aggiungendo lo script nel `layout.js` root
+
+> Usalo per il sito pubblico/landing page. Per il comportamento dentro l'app (dopo il login) usa PostHog.
+
+---
+
+## Sentry
+
+**Costo:** Gratuito fino al limite → Da $26/mese (Pro)
+
+Sentry è lo standard per l'**error monitoring in produzione**: cattura eccezioni, stack trace, contesto utente e performance issues.
+
+Il piano **Free** include:
+- **~5.000 errori/mese**
+- 1 membro del team
+- 30 giorni di retention
+
+Piani a pagamento:
+- **Team $26/mese**: 50.000 errori/mese, retention 90 giorni, alerting avanzato
+- **Business $80/mese**: errori illimitati, SSO, audit logs
+
+> Per un SaaS in produzione Sentry è quasi obbligatorio: senza un error monitor non sai quando gli utenti incappano in errori. Il free tier copre tranquillamente le fasi iniziali.
 
 ---
 
