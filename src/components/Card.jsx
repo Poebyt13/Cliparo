@@ -1,3 +1,5 @@
+import cn from "@/utils/cn";
+
 /**
  * Componente Card riusabile con titolo, descrizione e contenuto opzionale.
  *
@@ -10,7 +12,7 @@
 export default function Card({ title, description, children, className = "" }) {
   return (
     <div
-      className={`card bg-base-100 border border-base-300 shadow-sm rounded-box ${className}`}
+      className={cn("card bg-base-100 border border-base-300 shadow-sm rounded-box", className)}
     >
       <div className="card-body">
         {title && (

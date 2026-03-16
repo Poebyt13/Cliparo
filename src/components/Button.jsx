@@ -1,3 +1,5 @@
+import cn from "@/utils/cn";
+
 /**
  * Pulsante riusabile con varianti DaisyUI.
  *
@@ -29,7 +31,7 @@ export default function Button({
     ghost: "btn-ghost",
   }[variant] ?? "btn-primary";
 
-  const baseClass = `btn ${variantClass} ${className}`;
+  const baseClass = cn("btn", variantClass, className);
 
   // Se href è fornito, usa <a> per la navigazione
   if (href) {

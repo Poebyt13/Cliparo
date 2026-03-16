@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import siteConfig from "@/config/site";
+import cn from "@/utils/cn";
 
 /**
  * Componente Logo riusabile.
@@ -41,7 +42,7 @@ export default function Logo({ size = "md", variant = "both", href = "/", classN
   const displayText = siteConfig.logoText || siteConfig.name;
 
   return (
-    <Link href={href} className={`inline-flex items-center gap-2 ${className}`}>
+    <Link href={href} className={cn("inline-flex items-center gap-2", className)}>
       {/* Icona — mostrata in base a variant se logoImage esiste */}
       {showIcon && (
         <Image
@@ -56,7 +57,7 @@ export default function Logo({ size = "md", variant = "both", href = "/", classN
 
       {/* Testo — mostrato in base a variant; se no icon, mostra in ogni caso (fallback) */}
       {(showText || (!showIcon && variant !== "icon")) && (
-        <span className={`font-bold text-primary ${textSizes[size]}`}>
+        <span className={cn("font-bold text-primary", textSizes[size])}>
           {displayText}
         </span>
       )}

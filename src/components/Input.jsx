@@ -1,3 +1,5 @@
+import cn from "@/utils/cn";
+
 /**
  * Campo input con label e gestione errore.
  *
@@ -34,7 +36,7 @@ export default function Input({
         disabled={disabled}
         // Se disabled senza onChange, aggiungi readOnly per evitare warning React
         readOnly={disabled && !onChange}
-        className={`input w-full ${error ? "input-error" : ""} ${disabled ? "opacity-60 cursor-not-allowed" : ""}`}
+        className={cn("input w-full", error && "input-error", disabled && "opacity-60 cursor-not-allowed")}
         {...rest}
       />
       {error && (
