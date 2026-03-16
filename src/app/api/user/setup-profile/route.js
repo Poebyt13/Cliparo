@@ -3,8 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import connectToDatabase from "@/lib/mongodb";
 import User from "@/models/User";
-import path from "path";
-import { writeFile } from "fs/promises";
+import { uploadToR2 } from "@/lib/r2";
 import { applyRateLimit, standardLimiter } from "@/lib/ratelimit";
 
 // Tipi MIME accettati per le immagini
@@ -62,14 +61,11 @@ export async function POST(req) {
       const userId = session.user.id;
       const fileName = `${Date.now()}-${userId}.${ext}`;
 
-      // Salva il file in public/uploads
+      // Upload su Cloudflare R2
       const bytes = await imageFile.arrayBuffer();
       const buffer = Buffer.from(bytes);
-      const uploadPath = path.join(process.cwd(), "public", "uploads", fileName);
-      await writeFile(uploadPath, buffer);
-
-      // Salva l'URL relativo nel database
-      updateFields.image = `/uploads/${fileName}`;
+      const key = `avatars/${fileName}`;
+      updateFields.image = await uploadToR2(buffer, key, imageFile.type);
     }
 
     // Aggiorna name, image e imposta profileSetupPending a false

@@ -3,8 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import connectToDatabase from "@/lib/mongodb";
 import User from "@/models/User";
-import path from "path";
-import { writeFile } from "fs/promises";
+import { uploadToR2, deleteFromR2, getR2KeyFromUrl } from "@/lib/r2";
 import { applyRateLimit, standardLimiter } from "@/lib/ratelimit";
 
 // Tipi MIME accettati per le immagini
@@ -69,10 +68,17 @@ export async function PATCH(req) {
 
       const bytes = await imageFile.arrayBuffer();
       const buffer = Buffer.from(bytes);
-      const uploadPath = path.join(process.cwd(), "public", "uploads", fileName);
-      await writeFile(uploadPath, buffer);
 
-      updateFields.image = `/uploads/${fileName}`;
+      // Elimina vecchia immagine da R2 se presente
+      const currentUser = await User.findOne({ email: session.user.email });
+      const oldKey = getR2KeyFromUrl(currentUser?.image);
+      if (oldKey) {
+        await deleteFromR2(oldKey).catch(() => {});
+      }
+
+      // Upload nuova immagine su R2
+      const key = `avatars/${fileName}`;
+      updateFields.image = await uploadToR2(buffer, key, imageFile.type);
     }
 
     const updatedUser = await User.findOneAndUpdate(
