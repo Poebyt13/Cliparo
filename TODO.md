@@ -1,6 +1,51 @@
 # TODO — Boilerplate SaaS Next.js
 
-> Tutto completato! Il boilerplate è pronto per l'uso in produzione.
+---
+
+## 🔴 Da implementare
+
+Nessun task rimanente — tutto implementato! 🎉
+
+---
+
+## ✅ Completato
+
+### 7. `cn.js` — utility classi CSS condizionali
+- [x] Installato `clsx` e `tailwind-merge`
+- [x] Creato `src/utils/cn.js` con `cn(...classes)` Tailwind-safe
+- [x] Aggiornati componenti: `Button.jsx`, `Card.jsx`, `Input.jsx`, `Logo.jsx`
+
+### 8. `fetcher.js` — utility fetch per SWR/client
+- [x] Creato `src/utils/fetcher.js` con `fetcher(url)` e `postFetcher(url, data)`
+- [x] Gestione errori con status code e body JSON
+
+### 9. `global-error.js` — error boundary del root layout
+- [x] Creato `src/app/global-error.js` — `"use client"` con tag `<html>` e `<body>`
+- [x] Stesso design di `error.js` per coerenza visiva
+
+### 10. `generateMetadata` per ogni pagina
+- [x] Landing page — usa defaults dal root `layout.js` (title, description, OG image)
+- [x] Sign in — `layout.js` con title "Accedi"
+- [x] Legal Terms/Privacy — already had `export const metadata`
+- [x] Dashboard — `layout.js` con title "Dashboard" e `robots: { index: false }`
+- [x] Dashboard Billing — `layout.js` con title "Abbonamento" (noindex ereditato)
+- [x] Dashboard Profile — `layout.js` con title "Profilo" (noindex ereditato)
+- [x] Dashboard Settings — `layout.js` con title "Impostazioni" (noindex ereditato)
+- [x] Setup Profile — `layout.js` con title "Completa il profilo" e `noindex`
+
+### 11. File upload — Cloudflare R2
+- [x] Installato `@aws-sdk/client-s3`
+- [x] Creato `src/lib/r2.js` — client S3 per R2 con `uploadToR2()`, `deleteFromR2()`, `getR2KeyFromUrl()`
+- [x] Aggiornato `api/user/profile/route.js` — upload R2 + eliminazione vecchia immagine
+- [x] Aggiornato `api/user/setup-profile/route.js` — upload R2
+- [x] Aggiunto commento in `next.config.mjs` per `images.remotePatterns` R2
+- [x] **Env richieste:** `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET_NAME`, `R2_PUBLIC_URL`
+
+### 12. `vercel.json` — headers e configurazione produzione
+- [x] Security headers backup (ridondanti con `next.config.mjs`, difesa in profondità)
+- [x] Cache-Control `immutable` per assets statici (js, css, immagini, font)
+- [x] Route dev già protette con `NODE_ENV === "production"` nei route handler
+- [x] Cron verificato: `0 8 * * *` UTC
 
 ---
 
