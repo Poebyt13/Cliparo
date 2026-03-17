@@ -1,14 +1,21 @@
 import { Resend } from "resend";
 
-if (!process.env.RESEND_API_KEY) {
-  throw new Error("Definisci la variabile d'ambiente RESEND_API_KEY.");
-}
-
 /**
- * Istanza Resend inizializzata con la chiave API.
- * Riutilizzabile in tutte le utility del progetto.
+ * Istanza Resend con inizializzazione lazy.
+ * Creata al primo utilizzo per evitare che un'env mancante rompa il modulo
+ * al caricamento — l'errore viene lanciato solo quando si tenta di inviare.
  */
-export const resend = new Resend(process.env.RESEND_API_KEY);
+let _resend = null;
+
+function getResendClient() {
+  if (!_resend) {
+    if (!process.env.RESEND_API_KEY) {
+      throw new Error("Definisci la variabile d'ambiente RESEND_API_KEY.");
+    }
+    _resend = new Resend(process.env.RESEND_API_KEY);
+  }
+  return _resend;
+}
 
 /**
  * Invia un'email generica tramite Resend.
@@ -19,6 +26,7 @@ export const resend = new Resend(process.env.RESEND_API_KEY);
  * @returns {Promise<Object>} Risposta Resend
  */
 export async function sendEmail({ to, subject, react }) {
+  const resend = getResendClient();
   return resend.emails.send({
     from: process.env.EMAIL_FROM || "noreply@example.com",
     to,
