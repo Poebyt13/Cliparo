@@ -171,3 +171,126 @@ Guida per testare tutte le implementazioni del TODO completato.
 - [ ] Cloudflare R2 — errore gestito se R2 non configurato
 - [ ] `vercel.json` — security headers presenti nelle risposte
 - [ ] `vercel.json` — cache headers su assets statici (solo su Vercel)
+- [ ] Cookie consent banner — appare al primo accesso
+- [ ] Cookie consent banner — blocca analytics se rifiutato
+- [ ] Cookie consent banner — inizializza analytics se accettato
+- [ ] PostHog — eventi tracciati solo dopo consenso
+- [ ] Google Analytics — gtag iniettato solo dopo consenso
+- [ ] Welcome email — inviata solo al primo login
+
+---
+
+## 7. Cookie consent banner (GDPR) + Analytics
+
+**Cosa verificare:** il banner appare al primo accesso, salva la scelta e blocca/avvia gli analytics correttamente.
+
+### 7a. Prima visita — banner visibile
+
+1. Apri il browser in **modalità incognita** (oppure cancella il localStorage)
+2. Vai su `http://localhost:3000`
+3. **Verifica:** deve apparire in basso il banner con i pulsanti "Rifiuta" e "Accetta"
+4. **Ricarica la pagina** — il banner deve riapparire (finché non scegli)
+
+### 7b. Rifiuto cookie
+
+1. Apri la modalità incognita → vai su `/`
+2. Clicca **"Rifiuta"**
+3. **Verifica:** il banner scompare
+4. **Verifica localStorage:** apri DevTools → Application → Local Storage → `http://localhost:3000`
+   - Deve esserci la chiave `cookie_consent` con valore `declined`
+5. **Verifica analytics:** apri DevTools → Network → filtra per `posthog` o `google-analytics`
+   - Non deve esserci **nessuna** richiesta verso PostHog o Google Analytics
+6. Ricarica la pagina — il banner **non** deve riapparire (la scelta è salvata)
+
+### 7c. Accettazione cookie
+
+1. Apri la modalità incognita → vai su `/`
+2. Clicca **"Accetta"**
+3. **Verifica:** il banner scompare
+4. **Verifica localStorage:** chiave `cookie_consent` con valore `accepted`
+5. **Verifica PostHog** (se `NEXT_PUBLIC_POSTHOG_KEY` è configurata):
+   - DevTools → Network → filtra per `posthog` o `i.posthog.com`
+   - Deve apparire almeno una richiesta di pageview
+6. **Verifica GA** (se `NEXT_PUBLIC_GA_ID` è configurato):
+   - DevTools → Network → filtra per `googletagmanager` o `google-analytics`
+   - Deve apparire la richiesta di inizializzazione gtag
+7. Ricarica la pagina — analytics devono ripartire automaticamente (non serve riacceptare)
+
+### 7d. Test senza env configurate
+
+1. Senza `NEXT_PUBLIC_POSTHOG_KEY` e `NEXT_PUBLIC_GA_ID` nel `.env.local`:
+2. Clicca "Accetta" nel banner
+3. **Verifica:** nessun errore in console, nessuna richiesta di rete verso analytics
+4. Il sito funziona normalmente — le env mancanti vengono ignorate silenziosamente
+
+### 7e. Link Privacy Policy nel banner
+
+1. Apri il banner in modalità incognita
+2. Clicca sul link **"Privacy Policy"** nel testo del banner
+3. **Verifica:** navighi correttamente a `/legal/privacy`
+
+---
+
+## 8. PostHog — verifica pageview e connessione
+
+**Prerequisiti:** `NEXT_PUBLIC_POSTHOG_KEY` configurata nel `.env.local`, banner accettato (vedi 7c).
+
+> Nota: i file `src/lib/analytics.js` e `src/lib/posthog.js` sono file sorgente bundlati da Next.js — non sono importabili dalla console del browser tramite `import()`. Il test si fa tramite Network DevTools o la dashboard PostHog.
+
+### 8a. Verifica pageview automatici
+
+1. Accetta i cookie in modalità incognita (vedi 7c)
+2. Apri DevTools → Network → filtra per il tuo host PostHog (es. `eu.i.posthog.com`)
+3. Naviga tra alcune pagine (es. `/`, `/auth/signin`, `/dashboard`)
+4. **Verifica:** per ogni navigazione deve apparire una richiesta POST con `$pageview` nel payload
+5. **Verifica PostHog dashboard:** Events → deve comparire l'evento `$pageview`
+
+### 8b. Nessuna richiesta se banner non accettato
+
+1. Apri modalità incognita → **rifiuta** il banner
+2. Filtra Network per il tuo host PostHog
+3. Naviga tra le pagine
+4. **Verifica:** nessuna richiesta verso PostHog
+
+### 8c. Analytics riparte senza ricaricare dopo accettazione
+
+1. Apri modalità incognita — il banner appare
+2. Apri Network → filtra per PostHog
+3. Clicca **"Accetta"** senza ricaricare la pagina
+4. **Verifica:** entro pochi secondi deve apparire la prima richiesta PostHog (pageview della pagina corrente)
+
+---
+
+## 9. Welcome email — primo login
+
+**Prerequisiti:** `RESEND_API_KEY` e `EMAIL_FROM` configurati, dev server avviato.
+
+### 9a. Prima registrazione
+
+1. Vai su `/api/dev/reset` (POST) per azzerare il DB, oppure usa un'email che non hai mai usato
+2. Vai su `/auth/signin`
+3. Inserisci un'email nuova e clicca "Invia link magico"
+4. Apri la casella email dell'indirizzo inserito
+5. **Verifica:** deve essere arrivata l'email di benvenuto con oggetto `"Benvenuto!"`
+6. **Verifica contenuto:** l'email deve contenere il nome dell'utente (o "Utente" se non ancora impostato) e il link alla dashboard
+
+### 9b. Login successivo — email NON inviata
+
+1. Fai log out
+2. Accedi di nuovo con la stessa email
+3. **Verifica:** arriva solo l'email del magic link login, **non** il benvenuto
+4. Controlla i log del server (`npm run dev`) — non deve apparire nessun log di invio welcome email
+
+### 9c. Registrazione con Google
+
+1. Vai su `/auth/signin` → clicca "Continua con Google"
+2. Accedi con un account Google mai usato prima
+3. **Verifica:** deve arrivare la welcome email con il nome preso dall'account Google
+
+### 9d. Note sul comportamento senza env configurate
+
+> La rimozione di `RESEND_API_KEY` **rompe intenzionalmente** il Magic Link — il login via email *è* un'email, quindi senza il provider email non può funzionare. Questo è il comportamento corretto.
+>
+> All'avvio del server, `src/instrumentation.js` stampa in console un avviso chiaro per ogni env mancante, così sai subito cosa non è configurato prima di andare in errore a runtime.
+>
+> Google OAuth non dipende da Resend e funziona anche senza `RESEND_API_KEY` — la welcome email viene comunque tentata ma l'errore viene catturato silenziosamente senza bloccare il login.
