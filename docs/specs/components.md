@@ -9,6 +9,7 @@ Documentazione completa di tutti i componenti riutilizzabili del boilerplate.
 - [UI Base](#ui-base): Button, Card, Input, Logo, PageContainer
 - [Layout](#layout): Navbar, Footer, DashboardLayout, Sidebar, SessionProviderWrapper
 - [Gating](#gating): PremiumGate
+- [Analytics e Privacy](#analytics-e-privacy): AnalyticsProvider, CookieBanner, PostHogIdentify
 - [Landing Page](#landing-page): CallToActionSection, PricingSection, PricingSectionForTwo, FaqSection, FaqSectionAlt, HowItWorksSection, SocialProof, TestimonialsSection, VideoSection, ExplainInDays
 
 ---
@@ -549,6 +550,80 @@ Timeline orizzontale con 2-4 milestone. Layout responsive: orizzontale su deskto
 
 ---
 
+## Analytics e Privacy
+
+### AnalyticsProvider
+
+`src/components/AnalyticsProvider.jsx`
+
+Provider unico che gestisce cookie consent, inizializzazione PostHog e iniezione Google Analytics. Va usato nel layout root, dentro `SessionProviderWrapper`.
+
+| Prop | Tipo | Default | Descrizione |
+|------|------|---------|-------------|
+| `children` | `ReactNode` | — | Contenuto dell'app |
+| `privacyUrl` | `string` | — | URL pagina privacy (passato a CookieBanner) |
+
+**Comportamento:**
+- Al mount: controlla `localStorage.cookie_consent`
+- Se `"accepted"` → inizializza PostHog + inietta script GA, wrappa children in `PostHogProvider`
+- Se nessun valore → mostra `CookieBanner`
+- Se `"declined"` → nessun analytics
+
+```jsx
+// In src/app/layout.js
+<SessionProviderWrapper>
+  <AnalyticsProvider privacyUrl="/legal/privacy">
+    {children}
+  </AnalyticsProvider>
+</SessionProviderWrapper>
+```
+
+---
+
+### CookieBanner
+
+`src/components/CookieBanner.jsx`
+
+Banner GDPR fisso in basso. Appare solo al primo accesso (nessun valore in `localStorage.cookie_consent`).
+
+| Prop | Tipo | Default | Descrizione |
+|------|------|---------|-------------|
+| `privacyUrl` | `string` | `"/legal/privacy"` | Link alla pagina privacy |
+| `onAccept` | `function` | — | Callback quando l'utente accetta |
+| `onDecline` | `function` | — | Callback quando l'utente rifiuta |
+| `className` | `string` | `""` | Classi CSS aggiuntive |
+
+**Storage:** `localStorage` chiave `cookie_consent`, valori `"accepted"` o `"declined"`.
+
+**Export aggiuntivo:** `getCookieConsent()` — restituisce lo stato attuale del consenso.
+
+```jsx
+<CookieBanner
+  privacyUrl="/legal/privacy"
+  onAccept={() => startAnalytics()}
+  onDecline={() => stopAnalytics()}
+/>
+```
+
+---
+
+### PostHogIdentify
+
+`src/components/PostHogIdentify.jsx`
+
+Componente senza UI che identifica l'utente loggato in PostHog. Va incluso nel layout della dashboard (una sola volta).
+
+**Props:** nessuna.
+
+**Comportamento:** Quando la sessione NextAuth è `"authenticated"`, chiama `posthog.identify()` con ID utente, email, nome e piano abbonamento. Da quel momento tutti gli eventi PostHog sono associati all'utente reale.
+
+```jsx
+// Nel layout dashboard
+<PostHogIdentify />
+```
+
+---
+
 ## Struttura Email Templates
 
 I template email si trovano in `src/emails/` e vengono usati con Resend:
@@ -556,8 +631,11 @@ I template email si trovano in `src/emails/` e vengono usati con Resend:
 | Template | File | Quando viene inviato |
 |----------|------|---------------------|
 | Login Magic Link | `login.jsx` | Richiesta di login via email |
-| Welcome | `welcome.jsx` | Prima registrazione |
-| Password Reset | `passwordReset.jsx` | Richiesta reset password |
+| Welcome | `welcome.jsx` | Prima registrazione (auto, callback signIn) |
+| Password Reset | `passwordReset.jsx` | Richiesta reset password (template pronto) |
 | Payment Confirmation | `paymentConfirmation.jsx` | Pagamento completato (webhook Stripe) |
+| Subscription Expiring | `subscriptionExpiring.jsx` | 7 giorni e 1 giorno prima della scadenza (cron) |
+| Subscription Expired | `subscriptionExpired.jsx` | Abbonamento scaduto (cron/webhook) |
+| Account Deleted | `accountDeleted.jsx` | Conferma eliminazione account |
 
 Per personalizzare i template, modifica direttamente i file JSX in `src/emails/`.
