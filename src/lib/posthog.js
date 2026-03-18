@@ -22,12 +22,8 @@ export function initPostHog() {
     person_profiles: "identified_only",
     capture_pageview: true,
     capture_pageleave: true,
-    loaded: (ph) => {
-      // In sviluppo disabilita la cattura per non sporcare i dati
-      if (process.env.NODE_ENV === "development") {
-        ph.opt_out_capturing();
-      }
-    },
+    // Session replay disabilitato in sviluppo per non sprecare quota
+    disable_session_recording: process.env.NODE_ENV === "development",
   });
 }
 

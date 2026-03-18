@@ -1,3 +1,5 @@
+import PostHogIdentify from "@/components/PostHogIdentify";
+
 /**
  * Metadata per tutte le pagine dashboard.
  * Applica noindex a tutte le sotto-pagine e titolo di default "Dashboard".
@@ -8,6 +10,11 @@ export const metadata = {
   robots: { index: false, follow: false },
 };
 
-export default function DashboardMetadataLayout({ children }) {
-  return children;
+export default function DashboardRootLayout({ children }) {
+  return (
+    <>
+      <PostHogIdentify />
+      {children}
+    </>
+  );
 }
