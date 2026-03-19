@@ -5,7 +5,6 @@ import { MongoDBAdapter } from "@auth/mongodb-adapter";
 import clientPromise from "@/lib/mongoClient";
 import { sendEmail } from "@/lib/resend";
 import LoginEmail from "@/emails/login";
-import WelcomeEmail from "@/emails/welcome";
 import connectToDatabase from "@/lib/mongodb";
 import User from "@/models/User";
 
@@ -73,7 +72,6 @@ export const authOptions = {
 
         // Legge il documento esistente una volta sola (serve per più condizioni)
         const existingUser = await User.findOne({ email: user.email }).lean();
-        const isNewUser = !existingUser;
 
         const setFields = {};
 
@@ -111,19 +109,6 @@ export const authOptions = {
           );
         }
 
-        // Invia la welcome email solo al primo login (nuovo utente)
-        // È una comunicazione di servizio, non marketing — va sempre inviata
-        if (isNewUser) {
-          const siteUrl = process.env.NEXTAUTH_URL || "http://localhost:3000";
-          sendEmail({
-            to: user.email,
-            subject: "Benvenuto!",
-            react: WelcomeEmail({
-              name: user.name || "Utente",
-              dashboardUrl: `${siteUrl}/dashboard`,
-            }),
-          }).catch((err) => console.error("Errore invio welcome email:", err));
-        }
       } catch (error) {
         console.error("Errore nel callback signIn:", error);
       }

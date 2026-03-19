@@ -5,6 +5,8 @@ import connectToDatabase from "@/lib/mongodb";
 import User from "@/models/User";
 import { uploadToR2 } from "@/lib/r2";
 import { applyRateLimit, standardLimiter } from "@/lib/ratelimit";
+import { sendEmail } from "@/lib/resend";
+import WelcomeEmail from "@/emails/welcome";
 
 // Tipi MIME accettati per le immagini
 const ALLOWED_TYPES = ["image/jpeg", "image/png"];
@@ -68,22 +70,39 @@ export async function POST(req) {
       updateFields.image = await uploadToR2(buffer, key, imageFile.type);
     }
 
-    // Aggiorna name, image e imposta profileSetupPending a false
+    // session.user.needsSetup è letto fresh dal DB in ogni chiamata getServerSession
+    // (NextAuth database sessions rileggono l'utente a ogni request).
+    // È true solo se profileSetupPending è ancora true → primo completamento profilo.
+    const isFirstSetup = session.user.needsSetup === true;
+
     const updatedUser = await User.findOneAndUpdate(
       { email: session.user.email },
       { $set: { ...updateFields, profileSetupPending: false } },
-      { new: true }
+      { returnDocument: "after" }
     );
 
     if (!updatedUser) {
       return NextResponse.json({ error: "Utente non trovato." }, { status: 404 });
     }
 
+    // Invia welcome email solo al primo completamento del profilo
+    if (isFirstSetup) {
+      const siteUrl = process.env.NEXTAUTH_URL || "http://localhost:3000";
+      sendEmail({
+        to: session.user.email,
+        subject: "Benvenuto!",
+        react: WelcomeEmail({
+          name: name.trim(),
+          dashboardUrl: `${siteUrl}/dashboard`,
+        }),
+      }).catch((err) => console.error("Errore invio welcome email:", err));
+    }
+
     return NextResponse.json({
       ok: true,
       user: {
         name: updatedUser.name,
-        image: updatedUser.image,
+        image: updatedUser.image ?? null,
       },
     });
   } catch (error) {
