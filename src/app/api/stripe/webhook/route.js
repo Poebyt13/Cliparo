@@ -4,6 +4,8 @@ import connectToDatabase from "@/lib/mongodb";
 import User from "@/models/User";
 import { sendEmail } from "@/lib/resend";
 import SubscriptionExpiredEmail from "@/emails/subscriptionExpired";
+import PaymentConfirmationEmail from "@/emails/paymentConfirmation";
+import { formatPrice } from "@/utils/formatPrice";
 
 /**
  * Mappa gli status Stripe agli stati interni del modello User.
@@ -78,6 +80,31 @@ export async function POST(req) {
           );
           console.log(`  → subscription status: ${subscription.status}, current_period_end: ${subscription.current_period_end}`);
           await updateUserSubscription(customerId, subscription.status, subscription);
+
+          // Invia email di conferma pagamento (sempre, il pagamento va sempre confermato)
+          if (userId) {
+            const user = await User.findById(userId).lean();
+            if (user?.email) {
+              const planName = subscription.items?.data?.[0]?.price?.nickname || "Premium";
+              const amount = checkoutSession.amount_total;
+              try {
+                await sendEmail({
+                  to: user.email,
+                  subject: "Pagamento confermato — Grazie per il tuo abbonamento!",
+                  react: PaymentConfirmationEmail({
+                    name: user.name || user.email,
+                    plan: planName,
+                    amount: amount ? formatPrice(amount) : "—",
+                    date: new Date().toLocaleDateString("it-IT"),
+                    dashboardUrl: `${process.env.NEXTAUTH_URL || "http://localhost:3000"}/dashboard`,
+                  }),
+                });
+                console.log(`  📧 Email conferma pagamento inviata a ${user.email}`);
+              } catch (err) {
+                console.error("Errore invio email conferma pagamento:", err);
+              }
+            }
+          }
         }
         break;
       }
