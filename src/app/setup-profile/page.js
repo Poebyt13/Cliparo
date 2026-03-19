@@ -17,7 +17,7 @@ const MAX_IMAGE_SIZE = 2 * 1024 * 1024; // 2MB
  * Mostrata dopo il primo login se name o image sono mancanti.
  */
 export default function SetupProfilePage() {
-  const { data: session, status, update } = useSession();
+  const { data: session, status } = useSession();
   const router = useRouter();
 
   const [name, setName] = useState("");
@@ -109,11 +109,9 @@ export default function SetupProfilePage() {
         return;
       }
 
-      // Forza il refresh della sessione per aggiornare needsSetup
-      await update();
-
-      // Redirect alla dashboard dopo il completamento
-      router.push("/dashboard");
+      // Naviga alla dashboard: il layout server-side legge needsSetup direttamente
+      // dal DB (profileSetupPending è già false), quindi non torna mai a setup-profile.
+      router.replace("/dashboard");
     } catch (err) {
       setError("Errore di rete. Riprova.");
       setLoading(false);

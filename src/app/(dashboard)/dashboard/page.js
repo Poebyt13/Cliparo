@@ -1,8 +1,6 @@
 "use client";
 
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 import PremiumGate from "@/components/PremiumGate";
 
 /**
@@ -12,17 +10,9 @@ import PremiumGate from "@/components/PremiumGate";
  */
 export default function DashboardPage() {
   const { data: session, status } = useSession();
-  const router = useRouter();
-
-  // Redirect a setup-profile se il profilo è incompleto
-  useEffect(() => {
-    if (status === "authenticated" && session?.user?.needsSetup) {
-      router.replace("/setup-profile");
-    }
-  }, [status, session, router]);
 
   // Caricamento mentre la sessione viene idratata
-  if (status === "loading" || session?.user?.needsSetup) {
+  if (status === "loading") {
     return (
       <div className="flex items-center justify-center min-h-[50vh]">
         <span className="loading loading-spinner loading-lg text-primary" />
