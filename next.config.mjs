@@ -1,3 +1,5 @@
+import { withSentryConfig } from "@sentry/nextjs";
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // Domini esterni per le immagini ottimizzate (<Image> di Next.js)
@@ -34,4 +36,12 @@ const nextConfig = {
   },
 };
 
-export default nextConfig;
+// Sentry — wrappa solo se il DSN è configurato, altrimenti esporta config normale
+const sentryEnabled = !!process.env.NEXT_PUBLIC_SENTRY_DSN;
+
+export default sentryEnabled
+  ? withSentryConfig(nextConfig, {
+      silent: true,
+      hideSourceMaps: true,
+    })
+  : nextConfig;
