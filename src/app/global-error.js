@@ -1,5 +1,8 @@
 "use client";
 
+import * as Sentry from "@sentry/nextjs";
+import { useEffect } from "react";
+
 /**
  * Error boundary per crash nel root layout.
  * Diverso da error.js: global-error.js cattura errori che avvengono
@@ -9,6 +12,11 @@
  * quando questo componente è attivo, il root layout non è renderizzato.
  */
 export default function GlobalError({ error, reset }) {
+  // Invia l'errore a Sentry (se configurato)
+  useEffect(() => {
+    Sentry.captureException(error);
+  }, [error]);
+
   return (
     <html lang="it" data-theme="saas-light">
       <body className="antialiased">
