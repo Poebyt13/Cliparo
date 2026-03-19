@@ -54,7 +54,15 @@ const dashboardMenu = [
     href: "https://example.com/docs",
     icon: "book",
     external: true,
-  }
+  },
+  // Voce admin — visibile solo se l'email utente === NEXT_PUBLIC_ADMIN_EMAIL
+  {
+    type: "item",
+    label: "Admin",
+    href: "/dashboard/admin",
+    icon: "shield",
+    adminOnly: true,
+  },
 ];
 
 export default dashboardMenu;
