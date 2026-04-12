@@ -13,9 +13,9 @@ import Logo from "@/components/Logo";
  */
 export default function Navbar({ links = [], cta, userMenu, loading = false }) {
   return (
-    <div className="navbar bg-base-100 shadow-sm">
+    <div className="navbar bg-base-100/80 backdrop-blur-lg border-b border-base-300/30 sticky top-0 z-50">
       {/* Contenitore interno allineato con max-w delle sezioni pagina */}
-      <div className="flex w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="flex w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
       {/* ── Sinistra: hamburger mobile + logo ── */}
       <div className="navbar-start">
         {/* Menu hamburger mobile */}

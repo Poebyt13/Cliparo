@@ -7,14 +7,14 @@
  */
 const seoConfig = {
   // Titolo di default mostrato nel browser
-  defaultTitle: "SaaS Boilerplate",
+  defaultTitle: "clipFast — AI-powered viral clips",
 
-  // Template per il titolo delle sotto-pagine: "Pagina | SaaS Boilerplate"
-  titleTemplate: "%s | SaaS Boilerplate",
+  // Template per il titolo delle sotto-pagine: "Pagina | clipFast"
+  titleTemplate: "%s | clipFast",
 
   // Descrizione di default per i motori di ricerca
   description:
-    "Boilerplate completo per SaaS con Next.js, Stripe, MongoDB e Resend. Auth, pagamenti ed email pronti all'uso.",
+    "Turn any long video into viral TikTok clips. AI finds the most engaging moments, creates clips, adds captions, and formats them — in seconds.",
 
   // URL base del sito (senza slash finale)
   url: process.env.NEXTAUTH_URL || "http://localhost:3000",

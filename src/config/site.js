@@ -8,20 +8,20 @@
  */
 const siteConfig = {
   // Nome del sito — mostrato nella navbar, signin, titolo browser, email, ecc.
-  name: "SaaS",
+  name: "clipFast",
 
   // Tagline breve — usata in header, landing page, meta description
-  tagline: "Il tuo prodotto SaaS",
+  tagline: "Turn any video into viral TikTok clips",
 
   // URL base del sito (senza slash finale)
   url: process.env.NEXTAUTH_URL || "http://localhost:3000",
 
   // Logo come immagine: imposta il path (es. "/icon.svg") oppure null per usare solo il testo
-  logoImage: "/icon.svg",
+  logoImage: null,
 
   // Testo mostrato affianco all'icona (e usato come alt text).
   // Imposta a null per mostrare solo l'immagine senza testo affianco.
-  logoText: "SaaS",
+  logoText: "clipFast",
 };
 
 export default siteConfig;

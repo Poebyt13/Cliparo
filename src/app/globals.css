@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+/* ── Nasconde scrollbar mantenendo scroll ── */
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
 /* ──────────────────────────────────────────────────────────────
    TIPOGRAFIA GLOBALE
    Il font viene caricato in src/app/layout.js tramite next/font.
@@ -104,20 +108,20 @@ code, kbd, pre, samp {
   color-scheme: dark;
 
   /* ── Colori brand ─────────────────────────────────────────── */
-  --color-primary:           oklch(65% 0.22 264);  /* viola-blu più chiaro su scuro */
-  --color-primary-content:   oklch(16% 0.03 264);
-  --color-secondary:         oklch(68% 0.18 300);
-  --color-secondary-content: oklch(16% 0.02 300);
-  --color-accent:            oklch(72% 0.20 180);
+  --color-primary:           oklch(62% 0.28 275);  /* viola brillante */
+  --color-primary-content:   oklch(98% 0.01 275);
+  --color-secondary:         oklch(55% 0.25 290);
+  --color-secondary-content: oklch(98% 0.01 290);
+  --color-accent:            oklch(70% 0.20 180);
   --color-accent-content:    oklch(16% 0.02 180);
-  --color-neutral:           oklch(45% 0.05 264);
-  --color-neutral-content:   oklch(94% 0.01 264);
+  --color-neutral:           oklch(25% 0.03 270);
+  --color-neutral-content:   oklch(94% 0.01 270);
 
   /* ── Sfondi e testo ─────────────────────────────────────── */
-  --color-base-100:     oklch(18% 0.02 264);     /* sfondo principale: grigio scuro */
-  --color-base-200:     oklch(14% 0.02 264);     /* sfondo card/sezioni             */
-  --color-base-300:     oklch(10% 0.02 264);     /* bordi, divisori                 */
-  --color-base-content: oklch(92% 0.01 264);     /* testo principale: quasi bianco  */
+  --color-base-100:     oklch(12% 0.03 270);     /* sfondo principale: navy scurissimo */
+  --color-base-200:     oklch(15% 0.03 270);     /* sfondo card/sezioni               */
+  --color-base-300:     oklch(20% 0.04 270);     /* bordi, divisori                   */
+  --color-base-content: oklch(95% 0.01 270);     /* testo principale: quasi bianco    */
 
   /* ── Colori semantici ───────────────────────────────────── */
   --color-info:            oklch(72% 0.20 220);
@@ -126,13 +130,13 @@ code, kbd, pre, samp {
   --color-success-content: oklch(16% 0.02 140);
   --color-warning:         oklch(75% 0.25 60);
   --color-warning-content: oklch(16% 0.02 60);
-  --color-error:           oklch(65% 0.27 20);   /* rosso errore    */
+  --color-error:           oklch(65% 0.27 20);
   --color-error-content:   oklch(97% 0.01 25);
 
   /* ── Border radius (coerente con saas-light) ─────────────── */
   --radius-selector: 0.5rem;
-  --radius-field:    0.375rem;
-  --radius-box:      0.75rem;
+  --radius-field:    0.5rem;
+  --radius-box:      1rem;
 
   /* ── Border width ───────────────────────────────────────── */
   --border: 1px;
