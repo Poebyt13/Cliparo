@@ -7,13 +7,13 @@
  */
 export default function FaqSection({ faqs = [] }) {
   return (
-    <section className="py-16 bg-base-100">
+    <section className="py-16 bg-base-200">
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
         {/* Intestazione sezione */}
         <div className="text-center mb-10">
-          <h2 className="text-3xl font-bold text-base-content">Domande frequenti</h2>
+          <h2 className="text-3xl font-bold text-base-content">Frequently asked questions</h2>
           <p className="mt-3 text-base-content/60">
-            Tutto quello che vuoi sapere. E qualcosa in più.
+            Everything you want to know. And a bit more.
           </p>
         </div>
 
@@ -32,7 +32,7 @@ export default function FaqSection({ faqs = [] }) {
               </div>
 
               <div className="collapse-content text-sm text-base-content/70 leading-relaxed">
-                <p>{faq.answer}</p>
+                <p className="whitespace-pre-line">{faq.answer}</p>
               </div>
             </div>
           ))}

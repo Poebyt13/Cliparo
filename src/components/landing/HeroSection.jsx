@@ -14,25 +14,31 @@ const TICKER_WORDS = [
 
 export default function HeroSection() {
   return (
-    <section className="relative overflow-hidden pt-20 pb-24 sm:pt-28 sm:pb-32">
-      <div className="absolute inset-0 -z-10">
-        {/* Grid background con fade su tutti i lati */}
-        <div
-          className="absolute inset-0"
-          style={{
-            backgroundImage: `
-              linear-gradient(to right, oklch(40% 0.01 270 / 0.15) 1px, transparent 1px),
-              linear-gradient(to bottom, oklch(40% 0.01 270 / 0.15) 1px, transparent 1px)
-            `,
-            backgroundSize: "40px 40px",
-            maskImage: "radial-gradient(ellipse 80% 70% at 50% 40%, black 30%, transparent 100%)",
-            WebkitMaskImage: "radial-gradient(ellipse 80% 70% at 50% 40%, black 30%, transparent 100%)",
-          }}
-        />
+    <section className="relative overflow-hidden pt-28 pb-24 sm:pt-32 sm:pb-32">
+      {/* Grid a quadretti */}
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{
+          backgroundImage:
+            "linear-gradient(to right, rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.1) 1px, transparent 1px)",
+          backgroundSize: "44px 44px",
+          maskImage: "linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%)",
+          WebkitMaskImage: "linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%)",
+        }}
+      />
+      {/* Glow blobs */}
+      <div className="pointer-events-none absolute inset-0">
         <div className="absolute top-[-20%] left-[10%] w-150 h-150 rounded-full bg-purple-600/20 blur-[120px]" />
         <div className="absolute top-[10%] right-[5%] w-125 h-125 rounded-full bg-blue-600/15 blur-[100px]" />
         <div className="absolute bottom-[-10%] left-[40%] w-100 h-100 rounded-full bg-violet-600/10 blur-[80px]" />
       </div>
+      {/* Fade-out overlay — copre grid + luci verso il basso */}
+      <div
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-48"
+        style={{
+          background: "linear-gradient(to bottom, transparent 0%, var(--color-base-100) 100%)",
+        }}
+      />
 
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center">
         <span className="hero-reveal inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-1.5 text-xs font-medium text-primary mb-8" style={{ animationDelay: "0.05s" }}>
@@ -118,7 +124,12 @@ export default function HeroSection() {
         </div>
 
         <div className="hero-reveal mt-10 flex flex-col sm:flex-row items-center gap-4 justify-center" style={{ animationDelay: "0.54s" }}>
-          <Button label="⚡ Create your first video" href="/auth/signin" variant="primary" className="btn-lg" />
+          <a href="/auth/signin" className="btn btn-primary btn-lg gap-2">
+            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+              <path fillRule="evenodd" d="M14.615 1.595a.75.75 0 0 1 .359.852L12.982 9.75h7.268a.75.75 0 0 1 .548 1.262l-10.5 11.25a.75.75 0 0 1-1.272-.71l1.992-7.302H3.818a.75.75 0 0 1-.548-1.262l10.5-11.25a.75.75 0 0 1 .845-.143Z" clipRule="evenodd" />
+            </svg>
+            Create your first video
+          </a>
         </div>
 
         <p className="hero-reveal mt-4 text-xs text-base-content/30" style={{ animationDelay: "0.6s" }}>

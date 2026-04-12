@@ -88,33 +88,34 @@ const STEPS = [
 
           <div className="absolute left-5 top-0 bottom-0 w-px bg-white/60" />
 
-          {[
-            { left: "12%", color: "#c026d3", borderCls: "border-fuchsia-500" },
-            { left: "39%", color: "#10b981", borderCls: "border-emerald-400" },
-            { left: "64%", color: "#f97316", borderCls: "border-orange-400" },
-          ].map((c, i) => (
-            <div
-              key={i}
-              className={`absolute top-1 border-2 rounded-xl ${c.borderCls}`}
-              style={{
-                left: c.left,
-                width: "20%",
-                bottom: "6px",
-                background: `${c.color}55`,
-                boxShadow: `0 0 14px ${c.color}77`,
-              }}
-            >
-              <div
-                className="absolute -bottom-2.25 left-1/2 -translate-x-1/2"
-                style={{
-                  width: 0, height: 0,
-                  borderLeft: "6px solid transparent",
-                  borderRight: "6px solid transparent",
-                  borderTop: `9px solid ${c.color}`,
-                }}
-              />
-            </div>
-          ))}
+          {/* 3 colonne flex per allineare i box con i label sotto */}
+          <div className="absolute inset-x-5 top-1 bottom-1.5 flex">
+            {[
+              { color: "#c026d3", borderCls: "border-fuchsia-500" },
+              { color: "#10b981", borderCls: "border-emerald-400" },
+              { color: "#f97316", borderCls: "border-orange-400" },
+            ].map((c, i) => (
+              <div key={i} className="flex-1 flex items-stretch px-[8%]">
+                <div
+                  className={`w-full border-2 rounded-xl ${c.borderCls} relative`}
+                  style={{
+                    background: `${c.color}55`,
+                    boxShadow: `0 0 14px ${c.color}77`,
+                  }}
+                >
+                  <div
+                    className="absolute -bottom-2.25 left-1/2 -translate-x-1/2"
+                    style={{
+                      width: 0, height: 0,
+                      borderLeft: "6px solid transparent",
+                      borderRight: "6px solid transparent",
+                      borderTop: `9px solid ${c.color}`,
+                    }}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Labels row */}
