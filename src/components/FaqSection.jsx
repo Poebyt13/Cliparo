@@ -7,7 +7,7 @@
  */
 export default function FaqSection({ faqs = [] }) {
   return (
-    <section className="py-16 bg-base-200">
+    <section className="py-16 relative">
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
         {/* Intestazione sezione */}
         <div className="text-center mb-10">

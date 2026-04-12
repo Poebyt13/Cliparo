@@ -2,7 +2,10 @@ import { CREATORS } from "./data";
 
 export default function CreatorResultsSection() {
   return (
-    <section id="results" className="py-20 sm:py-28 bg-base-200/50">
+    <section id="results" className="py-20 sm:py-28 relative">
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute top-[15%] right-[8%] w-96 h-96 rounded-full bg-pink-600/12 blur-[120px]" />
+      </div>
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-14">
           <p className="text-sm font-semibold tracking-widest uppercase text-primary mb-3">

@@ -281,7 +281,10 @@ export default function HowItWorksSection() {
   }, []);
 
   return (
-    <section id="how-it-works" className="py-20 sm:py-28 bg-base-200/50">
+    <section id="how-it-works" className="py-20 sm:py-28 relative">
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute bottom-[5%] left-[5%] w-[500px] h-[500px] rounded-full bg-purple-600/12 blur-[140px]" />
+      </div>
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-14">
           <p className="text-sm font-semibold tracking-widest uppercase text-primary mb-3">

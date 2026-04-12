@@ -5,7 +5,10 @@ import { FEATURE_PILLS_ROW1, FEATURE_PILLS_ROW2 } from "./FeaturePills";
 
 export default function ViralClipsSection() {
   return (
-    <section className="py-20 sm:py-28 bg-base-100">
+    <section className="py-20 sm:py-28 relative">
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute top-[-10%] right-[5%] w-96 h-96 rounded-full bg-blue-600/12 blur-[130px]" />
+      </div>
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 mb-10">
         <div className="flex flex-col gap-2">
           <p className="text-sm font-semibold tracking-widest uppercase text-primary">

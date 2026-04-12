@@ -6,10 +6,11 @@ export default function CtaSection() {
   const [email, setEmail] = useState("");
 
   return (
-    <section className="py-20 sm:py-28 bg-base-100 relative overflow-hidden">
-      <div className="absolute inset-0 -z-10">
-        <div className="absolute top-[20%] left-[30%] w-100 h-100 rounded-full bg-purple-600/10 blur-[100px]" />
-        <div className="absolute bottom-[10%] right-[20%] w-75 h-75 rounded-full bg-blue-600/10 blur-[80px]" />
+    <section className="py-20 sm:py-28 relative">
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute top-[-10%] left-[20%] w-[500px] h-[500px] rounded-full bg-purple-600/20 blur-[120px]" />
+        <div className="absolute bottom-[-10%] right-[10%] w-[400px] h-[400px] rounded-full bg-blue-600/18 blur-[100px]" />
+        <div className="absolute top-[30%] right-[30%] w-64 h-64 rounded-full bg-violet-500/15 blur-[80px]" />
       </div>
 
       <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8 text-center">
