@@ -1,5 +1,32 @@
 @import "tailwindcss";
 
+/* ── Scroll reveal: sezioni che appaiono scrollando ── */
+.scroll-reveal {
+  opacity: 0;
+  filter: blur(10px);
+  transform: translateY(30px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, filter, transform;
+}
+.scroll-reveal.visible {
+  opacity: 1;
+  filter: blur(0);
+  transform: translateY(0);
+}
+/* Variante hero: solo opacity+blur, nessun translateY (evita gap layout) */
+.scroll-reveal-hero {
+  opacity: 0;
+  filter: blur(12px);
+  transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.scroll-reveal-hero.visible {
+  opacity: 1;
+  filter: blur(0);
+}
+
 /* ── Nasconde scrollbar mantenendo scroll ── */
 .scrollbar-hide::-webkit-scrollbar { display: none; }
 .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
