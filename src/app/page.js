@@ -9,7 +9,44 @@ import HowItWorksSection from "@/components/landing/HowItWorksSection";
 import FeaturesSection from "@/components/landing/FeaturesSection";
 import CreatorResultsSection from "@/components/landing/CreatorResultsSection";
 import CtaSection from "@/components/landing/CtaSection";
+import FaqSection from "@/components/FaqSection";
 import LandingFooter from "@/components/landing/LandingFooter";
+import ScrollReveal from "@/components/ScrollReveal";
+
+const FAQS = [
+  {
+    question: "What does clipFast do?",
+    answer: "clipFast turns your long videos into short, viral-ready clips.\nIt finds the best moments, adds captions, and formats everything automatically.",
+  },
+  {
+    question: "What kind of videos can I use?",
+    answer: "You can use any long-form video — YouTube, podcasts, interviews, or recorded content.",
+  },
+  {
+    question: "Do I need editing skills?",
+    answer: "No. Everything is automatic.\nJust upload your video and get ready-to-post clips.",
+  },
+  {
+    question: "How long does it take?",
+    answer: "Most videos are processed in just a few minutes.\nYou'll get multiple clips much faster than editing manually.",
+  },
+  {
+    question: "Does it add captions automatically?",
+    answer: "Yes. clipFast generates captions styled for TikTok, Reels, and Shorts to boost engagement.",
+  },
+  {
+    question: "Can I edit the clips after?",
+    answer: "Yes. You can download your clips and edit them in tools like CapCut or Premiere.",
+  },
+  {
+    question: "Who is this for?",
+    answer: "Creators, YouTubers, podcasters, and anyone who wants to grow using short-form content.",
+  },
+  {
+    question: "When will it be available?",
+    answer: "clipFast is currently in private beta.\nJoin the waitlist to get early access.",
+  },
+];
 
 export default function Home() {
   const { data: session, status } = useSession();
@@ -25,14 +62,29 @@ export default function Home() {
     : null;
 
   return (
-    <div className="min-h-screen bg-base-100 flex flex-col">
+    <div className="min-h-screen flex flex-col">
       <Navbar links={NAV_LINKS} cta={navCta} userMenu={navUserMenu} loading={status === "loading"} />
-      <HeroSection />
-      <ViralClipsSection />
-      <HowItWorksSection />
-      <FeaturesSection />
-      <CreatorResultsSection />
-      <CtaSection />
+      <ScrollReveal hero>
+        <HeroSection />
+      </ScrollReveal>
+      <ScrollReveal>
+        <ViralClipsSection />
+      </ScrollReveal>
+      <ScrollReveal>
+        <HowItWorksSection />
+      </ScrollReveal>
+      <ScrollReveal>
+        <FeaturesSection />
+      </ScrollReveal>
+      <ScrollReveal>
+        <CreatorResultsSection />
+      </ScrollReveal>
+      <ScrollReveal>
+        <CtaSection />
+      </ScrollReveal>
+      <ScrollReveal>
+        <FaqSection faqs={FAQS} />
+      </ScrollReveal>
       <LandingFooter />
     </div>
   );
