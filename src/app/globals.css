@@ -4,6 +4,18 @@
 .scrollbar-hide::-webkit-scrollbar { display: none; }
 .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
 
+/* ── Carosello auto-scroll ── */
+@keyframes carousel-scroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.carousel-track {
+  width: max-content;
+  animation: carousel-scroll 30s linear infinite;
+  padding-left: 1rem;
+}
+.carousel-track:hover { animation-play-state: paused; }
+
 /* ──────────────────────────────────────────────────────────────
    TIPOGRAFIA GLOBALE
    Il font viene caricato in src/app/layout.js tramite next/font.
