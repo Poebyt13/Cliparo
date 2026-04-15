@@ -125,7 +125,10 @@ export default function HeroSection() {
         </div>
 
         <div className="hero-reveal mt-10 flex flex-col sm:flex-row items-center gap-4 justify-center" style={{ animationDelay: "0.54s" }}>
-          <a href="/auth/signin" className="btn btn-primary btn-lg gap-2">
+          <a href="#waitlist" className="btn btn-primary btn-lg gap-2" onClick={(e) => {
+            e.preventDefault();
+            document.getElementById('waitlist')?.scrollIntoView({ behavior: 'smooth' });
+          }}>
             <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
               <path fillRule="evenodd" d="M14.615 1.595a.75.75 0 0 1 .359.852L12.982 9.75h7.268a.75.75 0 0 1 .548 1.262l-10.5 11.25a.75.75 0 0 1-1.272-.71l1.992-7.302H3.818a.75.75 0 0 1-.548-1.262l10.5-11.25a.75.75 0 0 1 .845-.143Z" clipRule="evenodd" />
             </svg>

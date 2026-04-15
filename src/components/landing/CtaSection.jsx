@@ -1,6 +1,29 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
+import confetti from "canvas-confetti";
+
+function fireConfetti() {
+  const end = Date.now() + 800;
+
+  (function frame() {
+    confetti({
+      particleCount: 4,
+      angle: 60,
+      spread: 55,
+      origin: { x: 0, y: 0.65 },
+      colors: ["#a78bfa", "#818cf8", "#c084fc", "#60a5fa", "#f472b6"],
+    });
+    confetti({
+      particleCount: 4,
+      angle: 120,
+      spread: 55,
+      origin: { x: 1, y: 0.65 },
+      colors: ["#a78bfa", "#818cf8", "#c084fc", "#60a5fa", "#f472b6"],
+    });
+    if (Date.now() < end) requestAnimationFrame(frame);
+  })();
+}
 
 export default function CtaSection() {
   const [email, setEmail] = useState("");
@@ -20,6 +43,7 @@ export default function CtaSection() {
       if (res.ok) {
         setStatus("success");
         setEmail("");
+        fireConfetti();
       } else if (res.status === 409) {
         setStatus("duplicate");
       } else {
@@ -31,7 +55,7 @@ export default function CtaSection() {
   }
 
   return (
-    <section className="py-20 sm:py-28 relative">
+    <section id="waitlist" className="py-20 sm:py-28 relative">
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute top-[-10%] left-[20%] w-[500px] h-[500px] rounded-full bg-purple-600/20 blur-[120px]" />
         <div className="absolute bottom-[-10%] right-[10%] w-[400px] h-[400px] rounded-full bg-blue-600/18 blur-[100px]" />
@@ -71,7 +95,7 @@ export default function CtaSection() {
           />
           <button
             type="submit"
-            className="btn btn-primary shrink-0 gap-2"
+            className="btn btn-primary w-full sm:w-auto shrink-0 gap-2"
             disabled={status === "loading" || status === "success"}
           >
             {status === "loading" ? (
@@ -91,9 +115,9 @@ export default function CtaSection() {
 
         <p className="mt-4 text-xs text-base-content/30">
           {status === "success"
-            ? "You're on the list! We'll notify you as soon as Cliparo is ready."
+            ? "Welcome aboard! Check your email for a confirmation from us."
             : status === "duplicate"
-              ? "You're already on the list! We'll reach out soon."
+              ? "You're already on the list — we'll reach out soon!"
               : status === "error"
                 ? "Something went wrong. Please try again."
                 : "No spam, we promise. Unsubscribe anytime."}

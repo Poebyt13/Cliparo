@@ -11,31 +11,8 @@ const AUTH_ROUTES = ["/auth/signin"];
 export function proxy(req) {
   const { pathname } = req.nextUrl;
 
-  // Il cookie ha nome diverso in HTTP (dev) e HTTPS (prod)
-  const sessionToken =
-    req.cookies.get("next-auth.session-token")?.value ||
-    req.cookies.get("__Secure-next-auth.session-token")?.value;
-
-  const isAuthRoute = AUTH_ROUTES.some((route) => pathname.startsWith(route));
-
-  // Utente autenticato su pagina auth → dashboard
-  if (sessionToken && isAuthRoute) {
-    return NextResponse.redirect(new URL("/dashboard", req.url));
-  }
-
-  // Utente non autenticato su pagina auth → lascia passare
-  if (!sessionToken && isAuthRoute) {
-    return NextResponse.next();
-  }
-
-  // Utente non autenticato su route protetta → signin
-  if (!sessionToken) {
-    const signInUrl = new URL("/auth/signin", req.url);
-    signInUrl.searchParams.set("callbackUrl", req.url);
-    return NextResponse.redirect(signInUrl);
-  }
-
-  return NextResponse.next();
+  // Landing-only mode: tutto blocca → redirect a home
+  return NextResponse.redirect(new URL("/", req.url));
 }
 
 /**
@@ -48,7 +25,11 @@ export const config = {
     "/account/:path*",
     "/settings/:path*",
     "/setup-profile",
-    "/auth/signin",
-    // Aggiungi qui altre route private o auth
+    "/auth/:path*",
+    "/api/admin/:path*",
+    "/api/user/:path*",
+    "/api/stripe/:path*",
+    "/api/cron/:path*",
+    "/api/dev/:path*",
   ],
 };

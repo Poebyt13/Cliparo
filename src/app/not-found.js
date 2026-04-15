@@ -15,14 +15,11 @@ export default function NotFound() {
       <Logo />
       <h1 className="mt-6 text-6xl font-bold text-base-content">404</h1>
       <p className="mt-3 text-lg text-base-content/60">
-        La pagina che stai cercando non esiste o è stata spostata.
+        This page doesn't exist or has been moved.
       </p>
-      <div className="mt-8 flex gap-3">
+      <div className="mt-8">
         <Link href="/" className="btn btn-primary">
-          Torna alla home
-        </Link>
-        <Link href="/dashboard" className="btn btn-ghost">
-          Vai alla dashboard
+          Back to home
         </Link>
       </div>
     </div>

@@ -11,8 +11,8 @@ export default function FaqSection({ faqs = [] }) {
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
         {/* Intestazione sezione */}
         <div className="text-center mb-10">
-          <h2 className="text-3xl font-bold text-base-content">Frequently asked questions</h2>
-          <p className="mt-3 text-base-content/60">
+          <h2 className="text-2xl sm:text-3xl font-bold text-base-content">Frequently asked questions</h2>
+          <p className="mt-3 text-base-content/60 text-sm sm:text-base">
             Everything you want to know. And a bit more.
           </p>
         </div>

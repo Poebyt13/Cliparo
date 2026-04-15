@@ -39,21 +39,13 @@ export default function Navbar({ links = [], cta, userMenu, loading = false }) {
         <div className="flex items-center gap-2">
           {loading && <div className="skeleton h-8 w-20 rounded-full" />}
 
-          {/* Log in link per utenti non autenticati */}
-          {!loading && !userMenu && (
-            <a
-              href="/auth/signin"
-              className="hidden sm:block px-3 py-1.5 text-sm font-medium text-base-content/70 hover:text-base-content transition-colors"
-            >
-              Log in
-            </a>
-          )}
+          {/* Log in link — rimosso per landing-only mode */}
 
           {/* CTA button */}
           {!loading && cta && (
             <a
               href={cta.href}
-              className="btn btn-primary btn-sm rounded-full px-4 text-sm"
+              className="btn btn-primary btn-sm rounded-full px-4 text-sm scroll-smooth"
             >
               {cta.label}
             </a>

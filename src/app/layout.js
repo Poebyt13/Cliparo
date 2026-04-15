@@ -1,8 +1,6 @@
 import { Inter, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import SessionProviderWrapper from "@/components/SessionProviderWrapper";
 import AnalyticsProvider from "@/components/AnalyticsProvider";
-import AdminHealthIndicator from "@/components/AdminHealthIndicator";
 import { Toaster } from "sonner";
 import seoConfig from "@/config/seo";
 
@@ -59,12 +57,9 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <SessionProviderWrapper>
-          <AnalyticsProvider privacyUrl="/legal/privacy">
+        <AnalyticsProvider privacyUrl="/legal/privacy">
             {children}
           </AnalyticsProvider>
-          <AdminHealthIndicator />
-        </SessionProviderWrapper>
         <Toaster richColors position="top-right" />
       </body>
     </html>

@@ -1,6 +1,5 @@
 "use client";
 
-import { useSession, signOut } from "next-auth/react";
 import Navbar from "@/components/Navbar";
 import { NAV_LINKS } from "@/components/landing/data";
 import HeroSection from "@/components/landing/HeroSection";
@@ -47,21 +46,11 @@ const FAQS = [
 ];
 
 export default function Home() {
-  const { data: session, status } = useSession();
-
-  const navCta = status === "unauthenticated" ? { label: "Join beta", href: "/auth/signin" } : null;
-  const navUserMenu = status === "authenticated"
-    ? {
-        label: session.user.email,
-        image: session.user.image || null,
-        links: [{ label: "Dashboard", href: "/dashboard" }],
-        onLogout: () => signOut(),
-      }
-    : null;
+  const navCta = { label: "Join beta", href: "#waitlist" };
 
   return (
     <div className="min-h-screen flex flex-col overflow-x-hidden">
-      <Navbar links={NAV_LINKS} cta={navCta} userMenu={navUserMenu} loading={status === "loading"} />
+      <Navbar links={NAV_LINKS} cta={navCta} />
       <ScrollReveal hero>
         <HeroSection />
       </ScrollReveal>
