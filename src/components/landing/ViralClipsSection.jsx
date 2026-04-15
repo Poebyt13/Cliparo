@@ -1,12 +1,34 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { DEMO_CLIPS } from "./data";
 import { FEATURE_PILLS_ROW1, FEATURE_PILLS_ROW2 } from "./FeaturePills";
 
 function VideoCard({ clip }) {
   const [muted, setMuted] = useState(true);
   const videoRef = useRef(null);
+  const cardRef = useRef(null);
+
+  // Lazy: carica e avvia il video solo quando la card è visibile
+  useEffect(() => {
+    const el = cardRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        const video = videoRef.current;
+        if (!video) return;
+        if (entry.isIntersecting) {
+          if (!video.src) video.src = clip.src;
+          video.play().catch(() => {});
+        } else {
+          video.pause();
+        }
+      },
+      { rootMargin: "200px" }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [clip.src]);
 
   const toggleMute = (e) => {
     e.stopPropagation();
@@ -20,16 +42,15 @@ function VideoCard({ clip }) {
   };
 
   return (
-    <div className="w-44 sm:w-52 shrink-0 rounded-2xl overflow-hidden border border-base-300/50 group">
+    <div ref={cardRef} className="w-44 sm:w-52 shrink-0 rounded-2xl overflow-hidden border border-base-300/50 group">
       <div className="aspect-9/16 bg-black relative">
         <video
-          ref={(el) => { videoRef.current = el; if (el) { el.muted = true; el.play().catch(() => {}); } }}
-          src={clip.src}
+          ref={videoRef}
           className="absolute inset-0 w-full h-full object-cover"
           muted
-          autoPlay
           loop
           playsInline
+          preload="none"
         />
         <div className="absolute top-2.5 left-2.5 flex items-center gap-1.5 bg-black/50 backdrop-blur-sm rounded-full px-2.5 py-1">
           <span className="w-1.5 h-1.5 rounded-full bg-green-400" />
@@ -58,7 +79,7 @@ function VideoCard({ clip }) {
 export default function ViralClipsSection() {
   return (
     <section className="py-20 sm:py-28 relative">
-      <div className="pointer-events-none absolute inset-0">
+      <div className="pointer-events-none absolute inset-0 hidden sm:block">
         <div className="absolute top-[-10%] right-[5%] w-96 h-96 rounded-full bg-blue-600/12 blur-[130px]" />
       </div>
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 mb-10">

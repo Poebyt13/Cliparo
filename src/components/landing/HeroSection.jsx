@@ -26,8 +26,8 @@ export default function HeroSection() {
           WebkitMaskImage: "linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%)",
         }}
       />
-      {/* Glow blobs */}
-      <div className="pointer-events-none absolute inset-0">
+      {/* Glow blobs — nascosti su mobile per performance */}
+      <div className="pointer-events-none absolute inset-0 hidden sm:block">
         <div className="absolute top-[-20%] left-[10%] w-150 h-150 rounded-full bg-purple-600/20 blur-[120px]" />
         <div className="absolute top-[10%] right-[5%] w-125 h-125 rounded-full bg-blue-600/15 blur-[100px]" />
         <div className="absolute bottom-[-10%] left-[40%] w-100 h-100 rounded-full bg-violet-600/10 blur-[80px]" />

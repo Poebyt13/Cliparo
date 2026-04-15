@@ -15,7 +15,7 @@ export default function robots() {
       {
         userAgent: "*",
         allow: "/",
-        disallow: ["/dashboard/", "/api/", "/setup-profile", "/auth/error"],
+        disallow: ["/api/"],
       },
     ],
     sitemap: `${baseUrl}/sitemap.xml`,
