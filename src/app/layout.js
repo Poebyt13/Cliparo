@@ -38,6 +38,10 @@ export const metadata = {
     images: [seoConfig.ogImage],
   },
   metadataBase: new URL(seoConfig.url),
+  icons: {
+    icon: "/icon.png",
+    apple: "/icon.png",
+  },
 };
 
 /**

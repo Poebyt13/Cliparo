@@ -7,13 +7,13 @@ export const NAV_LINKS = [
 ];
 
 export const DEMO_CLIPS = [
-  { title: "This entrepreneur from Saudi...", views: "2.3M views", duration: "0:42", gradient: "from-violet-600 to-blue-600" },
-  { title: "Day 31, we've sold $4,000...", views: "890K views", duration: "0:38", gradient: "from-pink-600 to-purple-600" },
-  { title: "I asked ChatGPT how to...", views: "4.1M views", duration: "0:55", gradient: "from-blue-600 to-cyan-500" },
-  { title: "Dropshipping ain't dead, in...", views: "1.7M views", duration: "0:31", gradient: "from-purple-600 to-pink-600" },
-  { title: "How to generate viral clips...", views: "3.2M views", duration: "0:48", gradient: "from-indigo-600 to-violet-600" },
-  { title: "Stop wasting time editing...", views: "5.6M views", duration: "0:29", gradient: "from-fuchsia-600 to-purple-600" },
-  { title: "This strategy changed every...", views: "2.8M views", duration: "0:44", gradient: "from-violet-500 to-indigo-600" },
+  { title: "This entrepreneur from Saudi...", views: "2.3M views", duration: "0:42", src: "/videos/language_video.mp4" },
+  { title: "Day 31, we've sold $4,000...", views: "890K views", duration: "0:38", src: "/videos/girl_speaking.mp4" },
+  { title: "I asked ChatGPT how to...", views: "4.1M views", duration: "0:55", src: "/videos/more_videos.mp4" },
+  { title: "Dropshipping ain't dead, in...", views: "1.7M views", duration: "0:31", src: "/videos/neywork_video.mp4" },
+  { title: "How to generate viral clips...", views: "3.2M views", duration: "0:48", src: "/videos/ninja_video.mp4" },
+  { title: "Stop wasting time editing...", views: "5.6M views", duration: "0:29", src: "/videos/podcast_video.mp4" },
+  { title: "This strategy changed every...", views: "2.8M views", duration: "0:44", src: "/videos/street_video.mp4" },
 ];
 
 export const FEATURES = [
@@ -39,7 +39,7 @@ export const CREATORS = [
     name: "Sarah Chen",
     handle: "@sarahcreates",
     verified: true,
-    quote: "clipFast turned my 2-hour podcast into 17 viral clips. Insane.",
+    quote: "Cliparo turned my 2-hour podcast into 17 viral clips. Insane.",
     stats: { views: "14.2M", clips: "47", reach: "2,400 views" },
     color: "from-violet-500 to-blue-500",
   },
@@ -47,7 +47,7 @@ export const CREATORS = [
     name: "Jake Morrison",
     handle: "@jakebuilds",
     verified: true,
-    quote: "I went from 6K to 150K followers in 3 weeks using clipFast clips.",
+    quote: "I went from 6K to 150K followers in 3 weeks using Cliparo clips.",
     stats: { views: "31.7M", clips: "89", reach: "6,100 views" },
     color: "from-orange-500 to-pink-500",
   },

@@ -7,10 +7,10 @@
  */
 const seoConfig = {
   // Titolo di default mostrato nel browser
-  defaultTitle: "clipFast — AI-powered viral clips",
+  defaultTitle: "Cliparo — AI-powered viral clips",
 
-  // Template per il titolo delle sotto-pagine: "Pagina | clipFast"
-  titleTemplate: "%s | clipFast",
+  // Template per il titolo delle sotto-pagine: "Pagina | Cliparo"
+  titleTemplate: "%s | Cliparo",
 
   // Descrizione di default per i motori di ricerca
   description:

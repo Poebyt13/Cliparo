@@ -8,132 +8,185 @@ export const metadata = {
 /**
  * Pagina Privacy Policy.
  * Percorso: /legal/privacy
- *
- * Template base con sezioni GDPR standard. Personalizzare i contenuti
- * con i dati reali del proprio servizio prima di andare in produzione.
  */
 export default function PrivacyPage() {
-  const lastUpdated = "15 marzo 2026";
+  const lastUpdated = "April 2026";
   const siteName = siteConfig.name;
-  const contactEmail = "hello@example.com";
+  const contactEmail = "ludenajluis@gmail.com";
+
+  const sections = [
+    {
+      title: "Introduction",
+      content: (
+        <>
+          <p>
+            This Privacy Policy explains how we collect, use, and protect your
+            information when you use our service.
+          </p>
+          <p>By using this website, you agree to this Privacy Policy.</p>
+        </>
+      ),
+    },
+    {
+      title: "Information We Collect",
+      content: (
+        <>
+          <p>We may collect the following types of information:</p>
+          <ul>
+            <li>
+              Email address (when you join the waitlist or create an account)
+            </li>
+            <li>Usage data (such as interactions with the platform)</li>
+            <li>
+              Uploaded content (videos or media you provide for processing)
+            </li>
+          </ul>
+        </>
+      ),
+    },
+    {
+      title: "How We Use Your Information",
+      content: (
+        <>
+          <p>We use collected information to:</p>
+          <ul>
+            <li>Provide and improve our AI video clipping service</li>
+            <li>Send important updates about the product</li>
+            <li>Improve user experience and performance</li>
+            <li>Respond to support requests</li>
+          </ul>
+        </>
+      ),
+    },
+    {
+      title: "Uploaded Content",
+      content: (
+        <>
+          <p>You retain full ownership of your uploaded videos.</p>
+          <p>We do not claim ownership of your content.</p>
+          <p>
+            We only process your content to generate AI clips and improve
+            functionality.
+          </p>
+          <p>We do not sell or share your content with third parties.</p>
+        </>
+      ),
+    },
+    {
+      title: "Data Storage",
+      content: (
+        <>
+          <p>
+            We store your data securely using industry-standard practices.
+          </p>
+          <p>
+            We retain data only as long as necessary to provide the service.
+          </p>
+        </>
+      ),
+    },
+    {
+      title: "Third-Party Services",
+      content: (
+        <>
+          <p>We may use third-party providers for:</p>
+          <ul>
+            <li>Hosting</li>
+            <li>Analytics</li>
+            <li>AI processing</li>
+          </ul>
+          <p>These providers only process data on our behalf.</p>
+        </>
+      ),
+    },
+    {
+      title: "Data Security",
+      content: (
+        <p>
+          We take reasonable measures to protect your data but cannot guarantee
+          absolute security.
+        </p>
+      ),
+    },
+    {
+      title: "Your Rights",
+      content: (
+        <>
+          <p>You may request:</p>
+          <ul>
+            <li>Access to your data</li>
+            <li>Deletion of your data</li>
+            <li>Correction of your information</li>
+          </ul>
+        </>
+      ),
+    },
+    {
+      title: "Changes",
+      content: (
+        <p>We may update this Privacy Policy at any time.</p>
+      ),
+    },
+    {
+      title: "Contact",
+      content: (
+        <p>
+          If you have questions, contact us at:{" "}
+          <a
+            href={`mailto:${contactEmail}`}
+            className="text-primary hover:underline font-medium"
+          >
+            {contactEmail}
+          </a>
+        </p>
+      ),
+    },
+  ];
 
   return (
-    <div className="min-h-screen bg-base-100">
+    <div className="min-h-screen bg-base-200/40">
       {/* Header */}
-      <div className="bg-base-200 border-b border-base-300 py-12">
-        <div className="mx-auto max-w-3xl px-4 text-center">
+      <div className="bg-base-100 border-b border-base-300">
+        <div className="mx-auto max-w-3xl px-4 py-14 text-center">
           <Logo />
-          <h1 className="mt-6 text-3xl font-bold text-base-content">
+          <h1 className="mt-8 text-4xl font-bold tracking-tight text-base-content">
             Privacy Policy
           </h1>
-          <p className="mt-2 text-sm text-base-content/50">
-            Ultimo aggiornamento: {lastUpdated}
+          <p className="mt-3 text-sm text-base-content/50">
+            Last updated: {lastUpdated}
           </p>
         </div>
       </div>
 
-      {/* Contenuto */}
-      <article className="mx-auto max-w-3xl px-4 py-12 prose prose-base">
-        <h2>1. Titolare del trattamento</h2>
-        <p>
-          Il titolare del trattamento dei dati personali è {siteName}. Per
-          contattarci: <a href={`mailto:${contactEmail}`}>{contactEmail}</a>.
+      {/* Sections */}
+      <div className="mx-auto max-w-3xl px-4 py-12 space-y-4">
+        {sections.map((section, index) => (
+          <div
+            key={section.title}
+            className="bg-base-100 border border-base-300 rounded-2xl px-8 py-7 shadow-sm"
+          >
+            {/* Numero + titolo sezione */}
+            <div className="flex items-center gap-3 mb-4">
+              <span className="flex items-center justify-center w-7 h-7 rounded-full bg-primary/10 text-primary text-xs font-bold shrink-0">
+                {index + 1}
+              </span>
+              <h2 className="text-lg font-semibold text-base-content">
+                {section.title}
+              </h2>
+            </div>
+
+            {/* Corpo della sezione */}
+            <div className="text-base-content/75 leading-relaxed text-[0.95rem] space-y-3 [&_ul]:mt-2 [&_ul]:space-y-1.5 [&_ul]:pl-5 [&_ul]:list-disc [&_ul]:marker:text-primary/60">
+              {section.content}
+            </div>
+          </div>
+        ))}
+
+        {/* Footer note */}
+        <p className="text-center text-xs text-base-content/40 pt-4 pb-2">
+          {siteName} · Privacy Policy · {lastUpdated}
         </p>
-
-        <h2>2. Dati raccolti</h2>
-        <p>Raccogliamo i seguenti dati:</p>
-        <ul>
-          <li>
-            <strong>Dati di registrazione:</strong> nome, indirizzo email,
-            immagine profilo (se fornita tramite Google OAuth)
-          </li>
-          <li>
-            <strong>Dati di pagamento:</strong> gestiti interamente da Stripe.
-            Non memorizziamo numeri di carta di credito.
-          </li>
-          <li>
-            <strong>Dati tecnici:</strong> indirizzo IP, tipo di browser, pagine
-            visitate (solo per sicurezza e rate limiting)
-          </li>
-        </ul>
-
-        <h2>3. Base giuridica</h2>
-        <p>Trattiamo i dati sulla base di:</p>
-        <ul>
-          <li>Esecuzione del contratto (fornitura del servizio)</li>
-          <li>Consenso (email marketing, se attivato)</li>
-          <li>Interesse legittimo (sicurezza, prevenzione abusi)</li>
-        </ul>
-
-        <h2>4. Finalità del trattamento</h2>
-        <ul>
-          <li>Fornitura e gestione del servizio</li>
-          <li>Gestione degli abbonamenti e dei pagamenti</li>
-          <li>Invio di email transazionali (conferma pagamento, scadenza piano)</li>
-          <li>Invio di email promozionali (solo con consenso esplicito)</li>
-          <li>Sicurezza e prevenzione di accessi non autorizzati</li>
-        </ul>
-
-        <h2>5. Condivisione dei dati</h2>
-        <p>I dati possono essere condivisi con:</p>
-        <ul>
-          <li>
-            <strong>Stripe:</strong> per la gestione dei pagamenti
-          </li>
-          <li>
-            <strong>Resend:</strong> per l&apos;invio di email transazionali
-          </li>
-          <li>
-            <strong>MongoDB Atlas:</strong> per l&apos;archiviazione dei dati
-          </li>
-          <li>
-            <strong>Vercel:</strong> per l&apos;hosting del servizio
-          </li>
-        </ul>
-        <p>Non vendiamo i tuoi dati a terze parti.</p>
-
-        <h2>6. Cookie</h2>
-        <p>
-          Utilizziamo solo cookie tecnici necessari per il funzionamento
-          dell&apos;autenticazione (session cookie httpOnly). Non utilizziamo
-          cookie di profilazione o di terze parti.
-        </p>
-
-        <h2>7. Conservazione dei dati</h2>
-        <p>
-          I dati vengono conservati per la durata del tuo account. Puoi
-          richiedere la cancellazione completa del tuo account e di tutti i dati
-          associati dalla pagina Impostazioni.
-        </p>
-
-        <h2>8. Diritti dell&apos;utente (GDPR)</h2>
-        <p>Hai diritto a:</p>
-        <ul>
-          <li>Accedere ai tuoi dati personali</li>
-          <li>Rettificare dati inesatti</li>
-          <li>Cancellare il tuo account e tutti i dati (diritto all&apos;oblio)</li>
-          <li>Limitare o opporti al trattamento</li>
-          <li>Portabilità dei dati</li>
-          <li>Revocare il consenso in qualsiasi momento</li>
-        </ul>
-        <p>
-          Per esercitare questi diritti, scrivi a{" "}
-          <a href={`mailto:${contactEmail}`}>{contactEmail}</a>.
-        </p>
-
-        <h2>9. Sicurezza</h2>
-        <p>
-          Adottiamo misure tecniche e organizzative per proteggere i tuoi dati:
-          connessioni HTTPS, cookie httpOnly e Secure, rate limiting, hashing
-          dei dati sensibili.
-        </p>
-
-        <h2>10. Modifiche</h2>
-        <p>
-          Ci riserviamo il diritto di aggiornare questa policy. Le modifiche
-          saranno pubblicate su questa pagina con la data di aggiornamento.
-        </p>
-      </article>
+      </div>
     </div>
   );
 }

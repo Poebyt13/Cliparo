@@ -6,8 +6,6 @@ import { NAV_LINKS } from "@/components/landing/data";
 import HeroSection from "@/components/landing/HeroSection";
 import ViralClipsSection from "@/components/landing/ViralClipsSection";
 import HowItWorksSection from "@/components/landing/HowItWorksSection";
-import FeaturesSection from "@/components/landing/FeaturesSection";
-import CreatorResultsSection from "@/components/landing/CreatorResultsSection";
 import CtaSection from "@/components/landing/CtaSection";
 import FaqSection from "@/components/FaqSection";
 import LandingFooter from "@/components/landing/LandingFooter";
@@ -15,8 +13,8 @@ import ScrollReveal from "@/components/ScrollReveal";
 
 const FAQS = [
   {
-    question: "What does clipFast do?",
-    answer: "clipFast turns your long videos into short, viral-ready clips.\nIt finds the best moments, adds captions, and formats everything automatically.",
+    question: "What does Cliparo do?",
+    answer: "Cliparo turns your long videos into short, viral-ready clips.\nIt finds the best moments, adds captions, and formats everything automatically.",
   },
   {
     question: "What kind of videos can I use?",
@@ -32,7 +30,7 @@ const FAQS = [
   },
   {
     question: "Does it add captions automatically?",
-    answer: "Yes. clipFast generates captions styled for TikTok, Reels, and Shorts to boost engagement.",
+    answer: "Yes. Cliparo generates captions styled for TikTok, Reels, and Shorts to boost engagement.",
   },
   {
     question: "Can I edit the clips after?",
@@ -44,7 +42,7 @@ const FAQS = [
   },
   {
     question: "When will it be available?",
-    answer: "clipFast is currently in private beta.\nJoin the waitlist to get early access.",
+    answer: "Cliparo is currently in private beta.\nJoin the waitlist to get early access.",
   },
 ];
 
@@ -72,12 +70,6 @@ export default function Home() {
       </ScrollReveal>
       <ScrollReveal>
         <HowItWorksSection />
-      </ScrollReveal>
-      <ScrollReveal>
-        <FeaturesSection />
-      </ScrollReveal>
-      <ScrollReveal>
-        <CreatorResultsSection />
       </ScrollReveal>
       <ScrollReveal>
         <CtaSection />
