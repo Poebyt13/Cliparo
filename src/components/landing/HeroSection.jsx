@@ -63,16 +63,17 @@ export default function HeroSection() {
           }
           @keyframes heroTicker {
             0%     { transform: translateY(0); }
-            16.7%  { transform: translateY(0);      animation-timing-function: cubic-bezier(0.34,1.45,0.64,1); }
-            20%    { transform: translateY(-1.1em); }
-            36.7%  { transform: translateY(-1.1em); animation-timing-function: cubic-bezier(0.34,1.45,0.64,1); }
-            40%    { transform: translateY(-2.2em); }
-            56.7%  { transform: translateY(-2.2em); animation-timing-function: cubic-bezier(0.34,1.45,0.64,1); }
-            60%    { transform: translateY(-3.3em); }
-            76.7%  { transform: translateY(-3.3em); animation-timing-function: cubic-bezier(0.34,1.45,0.64,1); }
-            80%    { transform: translateY(-4.4em); }
-            96.7%  { transform: translateY(-4.4em); animation-timing-function: cubic-bezier(0.34,1.45,0.64,1); }
-            100%   { transform: translateY(-5.5em); }
+            10%    { transform: translateY(0);      animation-timing-function: cubic-bezier(0.34,1.45,0.64,1); }
+            13.3%  { transform: translateY(-1.3em); }
+            23.3%  { transform: translateY(-1.3em); animation-timing-function: cubic-bezier(0.34,1.45,0.64,1); }
+            26.7%  { transform: translateY(-2.6em); }
+            36.7%  { transform: translateY(-2.6em); animation-timing-function: cubic-bezier(0.34,1.45,0.64,1); }
+            40%    { transform: translateY(-3.9em); }
+            50%    { transform: translateY(-3.9em); animation-timing-function: cubic-bezier(0.34,1.45,0.64,1); }
+            53.3%  { transform: translateY(-5.2em); }
+            63.3%  { transform: translateY(-5.2em); animation-timing-function: cubic-bezier(0.34,1.45,0.64,1); }
+            66.7%  { transform: translateY(-6.5em); }
+            100%   { transform: translateY(-6.5em); }
           }
         `}</style>
         <h1
@@ -81,12 +82,12 @@ export default function HeroSection() {
         >
           <span className="block">Turn any video into</span>
           {/* Container: mostra solo 1 slot alla volta */}
-          <span className="block overflow-hidden" style={{ height: "1.1em" }}>
+          <span className="block overflow-hidden" style={{ height: "1.3em" }}>
             {/* Track: scorre verso l'alto via CSS */}
             <span
               style={{
                 display: "block",
-                animation: "heroTicker 24s linear infinite",
+                animation: "heroTicker 14s linear infinite",
                 willChange: "transform",
               }}
             >
@@ -94,7 +95,7 @@ export default function HeroSection() {
                 <span
                   key={i}
                   className="block bg-linear-to-r from-purple-400 via-violet-400 to-blue-400 bg-clip-text text-transparent"
-                  style={{ height: "1.1em", lineHeight: 1.1 }}
+                  style={{ height: "1.3em", lineHeight: 1.3 }}
                 >
                   {word}
                 </span>

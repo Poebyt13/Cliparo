@@ -57,7 +57,7 @@ export default function Logo({ size = "md", variant = "both", href = "/", classN
 
       {/* Testo — mostrato in base a variant; se no icon, mostra in ogni caso (fallback) */}
       {(showText || (!showIcon && variant !== "icon")) && (
-        <span className={cn("font-bold text-primary", textSizes[size])}>
+        <span className={cn("font-bold text-white", textSizes[size])}>
           {displayText}
         </span>
       )}

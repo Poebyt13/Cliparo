@@ -1,7 +1,59 @@
 "use client";
 
+import { useState, useRef } from "react";
 import { DEMO_CLIPS } from "./data";
 import { FEATURE_PILLS_ROW1, FEATURE_PILLS_ROW2 } from "./FeaturePills";
+
+function VideoCard({ clip }) {
+  const [muted, setMuted] = useState(true);
+  const videoRef = useRef(null);
+
+  const toggleMute = (e) => {
+    e.stopPropagation();
+    const newMuted = !muted;
+    setMuted(newMuted);
+    if (videoRef.current) {
+      videoRef.current.muted = newMuted;
+      videoRef.current.pause();
+      videoRef.current.play().catch(() => {});
+    }
+  };
+
+  return (
+    <div className="w-44 sm:w-52 shrink-0 rounded-2xl overflow-hidden border border-base-300/50 group">
+      <div className="aspect-9/16 bg-black relative">
+        <video
+          ref={(el) => { videoRef.current = el; if (el) { el.muted = true; el.play().catch(() => {}); } }}
+          src={clip.src}
+          className="absolute inset-0 w-full h-full object-cover"
+          muted
+          autoPlay
+          loop
+          playsInline
+        />
+        <div className="absolute top-2.5 left-2.5 flex items-center gap-1.5 bg-black/50 backdrop-blur-sm rounded-full px-2.5 py-1">
+          <span className="w-1.5 h-1.5 rounded-full bg-green-400" />
+          <span className="text-[10px] text-white font-medium">AI Generated</span>
+        </div>
+        <button
+          onClick={toggleMute}
+          className="absolute top-2.5 right-2.5 w-7 h-7 flex items-center justify-center bg-black/50 backdrop-blur-sm rounded-full text-white hover:bg-black/70 transition-colors"
+        >
+          {muted ? (
+            <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M13.5 4.06c0-1.336-1.616-2.005-2.56-1.06l-4.5 4.5H4.508c-1.141 0-2.318.664-2.66 1.905A9.76 9.76 0 0 0 1.5 12c0 .898.121 1.768.35 2.595.341 1.24 1.518 1.905 2.659 1.905h1.93l4.5 4.5c.945.945 2.561.276 2.561-1.06V4.06ZM17.78 9.22a.75.75 0 1 0-1.06 1.06L18.44 12l-1.72 1.72a.75.75 0 1 0 1.06 1.06L19.5 13.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L20.56 12l1.72-1.72a.75.75 0 1 0-1.06-1.06L19.5 10.94l-1.72-1.72Z" />
+            </svg>
+          ) : (
+            <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M13.5 4.06c0-1.336-1.616-2.005-2.56-1.06l-4.5 4.5H4.508c-1.141 0-2.318.664-2.66 1.905A9.76 9.76 0 0 0 1.5 12c0 .898.121 1.768.35 2.595.341 1.24 1.518 1.905 2.659 1.905h1.93l4.5 4.5c.945.945 2.561.276 2.561-1.06V4.06ZM18.584 5.106a.75.75 0 0 1 1.06 0c3.808 3.807 3.808 9.98 0 13.788a.75.75 0 0 1-1.06-1.06 8.25 8.25 0 0 0 0-11.668.75.75 0 0 1 0-1.06Z" />
+              <path d="M15.932 7.757a.75.75 0 0 1 1.061 0 6 6 0 0 1 0 8.486.75.75 0 0 1-1.06-1.061 4.5 4.5 0 0 0 0-6.364.75.75 0 0 1 0-1.06Z" />
+            </svg>
+          )}
+        </button>
+      </div>
+    </div>
+  );
+}
 
 export default function ViralClipsSection() {
   return (
@@ -18,7 +70,7 @@ export default function ViralClipsSection() {
             AI-generated <span className="text-primary">viral clips</span>
           </h2>
           <p className="text-base-content/50 max-w-lg">
-            Every clip below was extracted and formatted by clipFast AI from long-form content.
+            Every clip below was extracted and formatted by Cliparo AI from long-form content.
           </p>
         </div>
       </div>
@@ -48,35 +100,7 @@ export default function ViralClipsSection() {
         <div className="pointer-events-none absolute inset-y-0 right-0 w-24 sm:w-40 z-10 bg-linear-to-l from-base-100 to-transparent" />
         <div className="marquee-track flex gap-4 pb-4 pl-4" style={{ width: "max-content" }}>
           {[...DEMO_CLIPS, ...DEMO_CLIPS].map((clip, i) => (
-            <div
-              key={i}
-              className="w-44 sm:w-52 shrink-0 rounded-2xl overflow-hidden bg-base-200 border border-base-300/50 group cursor-pointer hover:border-primary/30 transition-colors"
-            >
-              <div className={`aspect-9/14 bg-linear-to-br ${clip.gradient} relative`}>
-                <div className="absolute top-2.5 left-2.5 flex items-center gap-1.5 bg-black/50 backdrop-blur-sm rounded-full px-2.5 py-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-green-400" />
-                  <span className="text-[10px] text-white font-medium">AI Generated</span>
-                </div>
-                <div className="absolute top-2.5 right-2.5 bg-black/50 backdrop-blur-sm rounded-full px-2 py-1">
-                  <span className="text-[10px] text-white/80">{clip.duration}</span>
-                </div>
-                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                  <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur flex items-center justify-center">
-                    <svg className="w-5 h-5 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
-                  </div>
-                </div>
-              </div>
-              <div className="p-3">
-                <p className="text-xs text-base-content/70 line-clamp-2 leading-relaxed">{clip.title}</p>
-                <p className="text-[10px] text-base-content/30 mt-1.5">
-                  <svg className="w-3 h-3 inline mr-1 -mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                  </svg>
-                  {clip.views}
-                </p>
-              </div>
-            </div>
+            <VideoCard key={i} clip={clip} />
           ))}
         </div>
       </div>

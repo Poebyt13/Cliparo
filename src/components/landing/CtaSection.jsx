@@ -4,6 +4,31 @@ import { useState } from "react";
 
 export default function CtaSection() {
   const [email, setEmail] = useState("");
+  const [status, setStatus] = useState("idle"); // idle | loading | success | error | duplicate
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    setStatus("loading");
+
+    try {
+      const res = await fetch("/api/waitlist", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+
+      if (res.ok) {
+        setStatus("success");
+        setEmail("");
+      } else if (res.status === 409) {
+        setStatus("duplicate");
+      } else {
+        setStatus("error");
+      }
+    } catch {
+      setStatus("error");
+    }
+  }
 
   return (
     <section className="py-20 sm:py-28 relative">
@@ -32,7 +57,7 @@ export default function CtaSection() {
         </p>
 
         <form
-          onSubmit={(e) => { e.preventDefault(); }}
+          onSubmit={handleSubmit}
           className="mt-10 flex flex-col sm:flex-row items-center gap-3 max-w-md mx-auto"
         >
           <input
@@ -40,19 +65,38 @@ export default function CtaSection() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="you@email.com"
-            className="input w-full bg-base-200 border-base-300/50 focus:border-primary/50 placeholder:text-base-content/30"
+            className="input w-full bg-base-200 border-base-300/50 focus:border-primary/50 focus:outline-none placeholder:text-base-content/30"
             required
+            disabled={status === "loading" || status === "success"}
           />
-          <button type="submit" className="btn btn-primary shrink-0 gap-2">
-            Join waitlist
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
-            </svg>
+          <button
+            type="submit"
+            className="btn btn-primary shrink-0 gap-2"
+            disabled={status === "loading" || status === "success"}
+          >
+            {status === "loading" ? (
+              <span className="loading loading-spinner loading-sm" />
+            ) : status === "success" ? (
+              "You're in! 🎉"
+            ) : (
+              <>
+                Join waitlist
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+                </svg>
+              </>
+            )}
           </button>
         </form>
 
         <p className="mt-4 text-xs text-base-content/30">
-          No spam, we promise. Unsubscribe anytime.
+          {status === "success"
+            ? "You're on the list! We'll notify you as soon as Cliparo is ready."
+            : status === "duplicate"
+              ? "You're already on the list! We'll reach out soon."
+              : status === "error"
+                ? "Something went wrong. Please try again."
+                : "No spam, we promise. Unsubscribe anytime."}
         </p>
       </div>
     </section>
