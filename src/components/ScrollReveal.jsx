@@ -33,17 +33,16 @@ export default function ScrollReveal({ delay = 0, hero = false, className = "", 
       ([entry]) => {
         if (entry.isIntersecting) {
           el.classList.add("visible");
-          // Libera memoria GPU dopo il reveal
           el.style.willChange = "auto";
           observer.unobserve(el);
         }
       },
       {
-        // Trigger appena un pixel entra dal basso, con pre-carico di 200px
-        // (critico per sezioni alte su mobile dove threshold:0.1 richiedeva
-        // troppo scroll prima di rivelare)
         threshold: 0,
-        rootMargin: "0px 0px 200px 0px",
+        // 600px: pre-trigger molto in anticipo per gestire scroll veloci su mobile.
+        // Con 600px di margine, l'observer scatta quando la sezione è ancora
+        // 600px fuori dal viewport → è già visibile prima che ci arrivi.
+        rootMargin: "0px 0px 600px 0px",
       }
     );
 

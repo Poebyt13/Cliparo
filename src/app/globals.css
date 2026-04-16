@@ -1,16 +1,24 @@
 @import "tailwindcss";
 
 /* ── Scroll reveal: sezioni che appaiono scrollando ── */
+
+/* Mobile first: transizione veloce (0.25s) per evitare nero visibile
+   anche in caso di scroll rapido. Niente blur (pesante su mobile). */
 .scroll-reveal {
   opacity: 0;
-  transform: translate3d(0, 30px, 0);
-  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translate3d(0, 20px, 0);
+  transition: opacity 0.25s ease-out, transform 0.25s ease-out;
   backface-visibility: hidden;
 }
-/* Blur solo su desktop (pesante su mobile) */
+.scroll-reveal.visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+/* Desktop: animazione più ricca e più lenta */
 @media (min-width: 640px) {
   .scroll-reveal {
+    transform: translate3d(0, 30px, 0);
     filter: blur(10px);
     transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
                 filter 0.7s cubic-bezier(0.16, 1, 0.3, 1),
@@ -20,15 +28,15 @@
     filter: blur(0);
   }
 }
-.scroll-reveal.visible {
-  opacity: 1;
-  transform: translate3d(0, 0, 0);
-}
-/* Variante hero: solo opacity su mobile, opacity+blur su desktop */
+
+/* Variante hero */
 .scroll-reveal-hero {
   opacity: 0;
-  transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity 0.3s ease-out;
   backface-visibility: hidden;
+}
+.scroll-reveal-hero.visible {
+  opacity: 1;
 }
 @media (min-width: 640px) {
   .scroll-reveal-hero {
@@ -39,9 +47,6 @@
   .scroll-reveal-hero.visible {
     filter: blur(0);
   }
-}
-.scroll-reveal-hero.visible {
-  opacity: 1;
 }
 
 /* Utenti con prefers-reduced-motion: mostra tutto subito */

@@ -282,7 +282,7 @@ export default function HowItWorksSection() {
 
   return (
     <section id="how-it-works" className="py-20 sm:py-28 relative">
-      <div className="pointer-events-none absolute inset-0">
+      <div className="pointer-events-none absolute inset-0 hidden sm:block">
         <div className="absolute bottom-[5%] left-[5%] w-[500px] h-[500px] rounded-full bg-purple-600/12 blur-[140px]" />
       </div>
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">

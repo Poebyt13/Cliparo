@@ -56,7 +56,7 @@ export default function CtaSection() {
 
   return (
     <section id="waitlist" className="py-20 sm:py-28 relative">
-      <div className="pointer-events-none absolute inset-0">
+      <div className="pointer-events-none absolute inset-0 hidden sm:block">
         <div className="absolute top-[-10%] left-[20%] w-[500px] h-[500px] rounded-full bg-purple-600/20 blur-[120px]" />
         <div className="absolute bottom-[-10%] right-[10%] w-[400px] h-[400px] rounded-full bg-blue-600/18 blur-[100px]" />
         <div className="absolute top-[30%] right-[30%] w-64 h-64 rounded-full bg-violet-500/15 blur-[80px]" />
