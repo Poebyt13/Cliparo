@@ -32,7 +32,7 @@ export default function ScrollReveal({ delay = 0, hero = false, className = "", 
     // Desktop: scatta quando l'elemento è 80px già visibile → si vede l'animazione.
     // Mobile: pre-trigger di 80px + transizione 0.25s → appare subito senza nero.
     const isMobile = window.matchMedia("(max-width: 639px)").matches;
-    const rootMargin = isMobile ? "0px 0px 80px 0px" : "0px 0px -180px 0px";
+    const rootMargin = isMobile ? "0px 0px -30px 0px" : "0px 0px -220px 0px";
 
     const observer = new IntersectionObserver(
       ([entry]) => {
