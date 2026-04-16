@@ -78,20 +78,20 @@ function VideoCard({ clip }) {
 
 export default function ViralClipsSection() {
   return (
-    <section className="py-20 sm:py-28 relative">
+    <section id="features" className="py-20 sm:py-28 relative">
       <div className="pointer-events-none absolute inset-0 hidden sm:block">
         <div className="absolute top-[-10%] right-[5%] w-96 h-96 rounded-full bg-blue-600/12 blur-[130px]" />
       </div>
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 mb-10">
         <div className="flex flex-col gap-2">
           <p className="text-sm font-semibold tracking-widest uppercase text-primary">
-            Viral Clips
+            Output
           </p>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-base-content leading-tight">
-            AI-generated <span className="text-primary">viral clips</span>
+            Real clips. <span className="text-primary">Real results.</span>
           </h2>
           <p className="text-base-content/50 max-w-lg">
-            Every clip below was extracted and formatted by Cliparo AI from long-form content.
+            Every clip below was automatically extracted by Cliparo — no editor, no timeline, no effort.
           </p>
         </div>
       </div>

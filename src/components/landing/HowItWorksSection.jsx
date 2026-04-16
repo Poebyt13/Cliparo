@@ -6,8 +6,8 @@ import { useState, useEffect, useRef, useCallback } from "react";
 const STEPS = [
   {
     num: "01",
-    title: "Add your video",
-    description: "Paste a link or upload any long-form video — YouTube, podcast, interview.",
+    title: "Drop your video",
+    description: "Paste a YouTube link or upload a file. Podcasts, interviews, tutorials, talking-head content — anything works.",
     icon: (
       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5" />
@@ -30,8 +30,8 @@ const STEPS = [
   },
   {
     num: "02",
-    title: "AI finds the best moments",
-    description: "Our AI analyzes your content and automatically detects the most engaging and viral moments.",
+    title: "AI picks the viral moments",
+    description: "Cliparo scans every second of your video and flags the hooks, emotional peaks, and high-retention moments — the ones people actually share.",
     icon: (
       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 0 0-2.455 2.456Z" />
@@ -172,8 +172,8 @@ const STEPS = [
   },
   {
     num: "03",
-    title: "Download ready-to-post clips",
-    description: "Get perfectly formatted, captioned clips ready for TikTok, Reels, and Shorts.",
+    title: "Post in minutes, not hours",
+    description: "Your clips come out captioned, cropped to 9:16, and ready to post. No editing, no exports, no wasted time.",
     icon: (
       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
@@ -291,9 +291,9 @@ export default function HowItWorksSection() {
             How it works
           </p>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-base-content leading-tight">
-            Three steps to{" "}
+            From raw video to{" "}
             <span className="bg-linear-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
-              viral content
+              ready-to-post clips
             </span>
           </h2>
         </div>

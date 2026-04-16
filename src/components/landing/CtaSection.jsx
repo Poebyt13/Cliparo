@@ -55,29 +55,30 @@ export default function CtaSection() {
   }
 
   return (
-    <section id="waitlist" className="py-20 sm:py-28 relative">
+    <section id="results" className="py-20 sm:py-28 relative">
       <div className="pointer-events-none absolute inset-0 hidden sm:block">
         <div className="absolute top-[-10%] left-[20%] w-[500px] h-[500px] rounded-full bg-purple-600/20 blur-[120px]" />
         <div className="absolute bottom-[-10%] right-[10%] w-[400px] h-[400px] rounded-full bg-blue-600/18 blur-[100px]" />
         <div className="absolute top-[30%] right-[30%] w-64 h-64 rounded-full bg-violet-500/15 blur-[80px]" />
       </div>
 
-      <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8 text-center">
+      <div id="waitlist" className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8 text-center">
         <span className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-1.5 text-xs font-medium text-primary mb-8">
           <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-          Limited beta spots
+          Private beta — limited spots
         </span>
 
         <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-base-content leading-tight">
-          Ready to go{" "}
+          Stop editing.
+          Start{" "}
           <span className="bg-linear-to-r from-purple-400 via-violet-400 to-blue-400 bg-clip-text text-transparent">
-            viral
+            growing.
           </span>
-          ?
         </h2>
 
         <p className="mt-5 text-base-content/50 text-lg max-w-md mx-auto">
-          Join 2,400+ creators already on the waitlist. Get early access and start generating viral clips.
+          Be among the first to try Cliparo.
+          Early users get priority access and a lower price at launch.
         </p>
 
         <form
@@ -104,7 +105,7 @@ export default function CtaSection() {
               "You're in! 🎉"
             ) : (
               <>
-                Join waitlist
+                Get early access
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
                 </svg>
@@ -120,7 +121,7 @@ export default function CtaSection() {
               ? "You're already on the list — we'll reach out soon!"
               : status === "error"
                 ? "Something went wrong. Please try again."
-                : "No spam, we promise. Unsubscribe anytime."}
+                : "We'll only email you when access is ready. No spam."}
         </p>
       </div>
     </section>

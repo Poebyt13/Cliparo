@@ -43,7 +43,7 @@ export default function HeroSection() {
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center">
         <span className="hero-reveal inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-1.5 text-xs font-medium text-primary mb-8" style={{ animationDelay: "0.05s" }}>
           <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-          Currently in private beta
+          Private beta — limited spots
         </span>
 
         {/*
@@ -80,7 +80,7 @@ export default function HeroSection() {
           className="hero-reveal text-4xl sm:text-5xl lg:text-6xl font-extrabold text-base-content tracking-tight"
           style={{ lineHeight: 1.1, animationDelay: "0.18s" }}
         >
-          <span className="block">Turn any video into</span>
+          <span className="block">Your long videos, turned into</span>
           {/* Container: mostra solo 1 slot alla volta */}
           <span className="block overflow-hidden" style={{ height: "1.3em" }}>
             {/* Track: scorre verso l'alto via CSS */}
@@ -105,7 +105,8 @@ export default function HeroSection() {
         </h1>
 
         <p className="hero-reveal mt-6 text-lg text-base-content/50 max-w-xl mx-auto leading-relaxed" style={{ animationDelay: "0.32s" }}>
-          AI finds the most engaging moments, creates clips, adds captions, and formats them — in seconds.
+          No editing. No timeline. No guessing what to cut.<br className="hidden sm:block" />
+          Upload your video — Cliparo handles the rest in minutes.
         </p>
 
         {/* Perfect for */}
@@ -132,24 +133,25 @@ export default function HeroSection() {
             <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
               <path fillRule="evenodd" d="M14.615 1.595a.75.75 0 0 1 .359.852L12.982 9.75h7.268a.75.75 0 0 1 .548 1.262l-10.5 11.25a.75.75 0 0 1-1.272-.71l1.992-7.302H3.818a.75.75 0 0 1-.548-1.262l10.5-11.25a.75.75 0 0 1 .845-.143Z" clipRule="evenodd" />
             </svg>
-            Create your first video
+            Get early access
           </a>
         </div>
 
         <p className="hero-reveal mt-4 text-xs text-base-content/30" style={{ animationDelay: "0.6s" }}>
-          Get your generated video in less than 5 minutes.
+          Free to join. No credit card required.
         </p>
 
-        <div className="hero-reveal mt-14 flex gap-10 justify-center" style={{ animationDelay: "0.72s" }}>
+        <div className="hero-reveal mt-14 flex flex-wrap items-center justify-center gap-3" style={{ animationDelay: "0.72s" }}>
           {[
-            { value: "2,400+", label: "Beta waitlist" },
-            { value: "50K+", label: "Clips generated" },
-            { value: "12x", label: "Faster editing" },
-          ].map((s) => (
-            <div key={s.label}>
-              <p className="text-2xl font-bold text-base-content">{s.value}</p>
-              <p className="text-xs text-base-content/40 mt-0.5">{s.label}</p>
-            </div>
+            "No editing required",
+            "TikTok, Reels & Shorts",
+            "Captions included",
+            "Ready in minutes",
+          ].map((tag) => (
+            <span key={tag} className="inline-flex items-center gap-1.5 text-xs text-base-content/40 border border-base-300/40 rounded-full px-3 py-1">
+              <span className="w-1 h-1 rounded-full bg-primary/60" />
+              {tag}
+            </span>
           ))}
         </div>
       </div>

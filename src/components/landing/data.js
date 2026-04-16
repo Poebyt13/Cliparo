@@ -18,18 +18,18 @@ export const DEMO_CLIPS = [
 
 export const FEATURES = [
   {
-    title: "AI viral moment detection",
-    description: "Identifies hooks, emotional peaks, and high-engagement markers to automatically select the best clips.",
+    title: "Finds your best moments automatically",
+    description: "The AI reads your video like a content strategist. It spots hooks, emotional peaks, and high-retention moments — so you never have to guess what to cut.",
     iconPath: "M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09Z",
   },
   {
-    title: "Auto-generated captions",
-    description: "Accurate, stylized captions that boost watch time and accessibility across all platforms.",
+    title: "Captions that keep people watching",
+    description: "Styled captions generated automatically. Viewers stay longer. Your content reaches more people.",
     iconPath: "M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.076-4.076a1.526 1.526 0 0 1 1.037-.443 48.282 48.282 0 0 0 5.68-.494c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z",
   },
   {
-    title: "TikTok optimized formatting",
-    description: "9:16 aspect ratio, perfect cropping, and platform-ready export for TikTok, Reels, and Shorts.",
+    title: "Platform-ready. Every time.",
+    description: "Perfectly cropped to 9:16, ready to post on TikTok, Reels, and Shorts. No exporting, no resizing.",
     iconPath: "M10.5 1.5H8.25A2.25 2.25 0 0 0 6 3.75v16.5a2.25 2.25 0 0 0 2.25 2.25h7.5A2.25 2.25 0 0 0 18 20.25V3.75a2.25 2.25 0 0 0-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3",
   },
 ];
