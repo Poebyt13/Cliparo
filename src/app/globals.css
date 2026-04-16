@@ -3,10 +3,10 @@
 /* ── Scroll reveal: sezioni che appaiono scrollando ── */
 .scroll-reveal {
   opacity: 0;
-  transform: translateY(30px);
+  transform: translate3d(0, 30px, 0);
   transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
               transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: opacity, transform;
+  backface-visibility: hidden;
 }
 /* Blur solo su desktop (pesante su mobile) */
 @media (min-width: 640px) {
@@ -15,7 +15,6 @@
     transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
                 filter 0.7s cubic-bezier(0.16, 1, 0.3, 1),
                 transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-    will-change: opacity, filter, transform;
   }
   .scroll-reveal.visible {
     filter: blur(0);
@@ -23,12 +22,13 @@
 }
 .scroll-reveal.visible {
   opacity: 1;
-  transform: translateY(0);
+  transform: translate3d(0, 0, 0);
 }
 /* Variante hero: solo opacity su mobile, opacity+blur su desktop */
 .scroll-reveal-hero {
   opacity: 0;
   transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  backface-visibility: hidden;
 }
 @media (min-width: 640px) {
   .scroll-reveal-hero {
@@ -42,6 +42,17 @@
 }
 .scroll-reveal-hero.visible {
   opacity: 1;
+}
+
+/* Utenti con prefers-reduced-motion: mostra tutto subito */
+@media (prefers-reduced-motion: reduce) {
+  .scroll-reveal,
+  .scroll-reveal-hero {
+    opacity: 1 !important;
+    filter: none !important;
+    transform: none !important;
+    transition: none !important;
+  }
 }
 
 /* ── Nasconde scrollbar mantenendo scroll ── */
