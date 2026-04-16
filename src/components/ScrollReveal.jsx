@@ -29,6 +29,11 @@ export default function ScrollReveal({ delay = 0, hero = false, className = "", 
       return;
     }
 
+    // Desktop: scatta quando l'elemento è 80px già visibile → si vede l'animazione.
+    // Mobile: pre-trigger di 80px + transizione 0.25s → appare subito senza nero.
+    const isMobile = window.matchMedia("(max-width: 639px)").matches;
+    const rootMargin = isMobile ? "0px 0px 80px 0px" : "0px 0px -180px 0px";
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -37,13 +42,7 @@ export default function ScrollReveal({ delay = 0, hero = false, className = "", 
           observer.unobserve(el);
         }
       },
-      {
-        threshold: 0,
-        // 600px: pre-trigger molto in anticipo per gestire scroll veloci su mobile.
-        // Con 600px di margine, l'observer scatta quando la sezione è ancora
-        // 600px fuori dal viewport → è già visibile prima che ci arrivi.
-        rootMargin: "0px 0px 600px 0px",
-      }
+      { threshold: 0, rootMargin }
     );
 
     observer.observe(el);

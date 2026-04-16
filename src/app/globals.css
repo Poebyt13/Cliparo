@@ -1,13 +1,12 @@
 @import "tailwindcss";
 
-/* ── Scroll reveal: sezioni che appaiono scrollando ── */
+/* ── Scroll reveal ── */
 
-/* Mobile first: transizione veloce (0.25s) per evitare nero visibile
-   anche in caso di scroll rapido. Niente blur (pesante su mobile). */
+/* Mobile: effetto sottile ma visibile — opacity + leggero translateY, veloce */
 .scroll-reveal {
   opacity: 0;
-  transform: translate3d(0, 20px, 0);
-  transition: opacity 0.25s ease-out, transform 0.25s ease-out;
+  transform: translate3d(0, 16px, 0);
+  transition: opacity 0.35s ease-out, transform 0.35s ease-out;
   backface-visibility: hidden;
 }
 .scroll-reveal.visible {
@@ -15,10 +14,10 @@
   transform: translate3d(0, 0, 0);
 }
 
-/* Desktop: animazione più ricca e più lenta */
+/* Desktop: animazione completa con blur, più lenta e cinematic */
 @media (min-width: 640px) {
   .scroll-reveal {
-    transform: translate3d(0, 30px, 0);
+    transform: translate3d(0, 32px, 0);
     filter: blur(10px);
     transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
                 filter 0.7s cubic-bezier(0.16, 1, 0.3, 1),
@@ -32,7 +31,7 @@
 /* Variante hero */
 .scroll-reveal-hero {
   opacity: 0;
-  transition: opacity 0.3s ease-out;
+  transition: opacity 0.35s ease-out;
   backface-visibility: hidden;
 }
 .scroll-reveal-hero.visible {
@@ -49,7 +48,7 @@
   }
 }
 
-/* Utenti con prefers-reduced-motion: mostra tutto subito */
+/* prefers-reduced-motion: nessuna animazione */
 @media (prefers-reduced-motion: reduce) {
   .scroll-reveal,
   .scroll-reveal-hero {
