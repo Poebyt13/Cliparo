@@ -5,56 +5,41 @@ import {
   Container,
   Heading,
   Text,
-  Img,
   Hr,
   Preview,
   Section,
 } from "@react-email/components";
 
-/**
- * Email di conferma waitlist inviata all'utente che si iscrive.
- * @param {Object} props
- * @param {string} props.siteUrl - URL base del sito (per caricare l'icona)
- */
 export default function WaitlistConfirmEmail() {
-  const logoUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/icon.png`;
   return (
     <Html lang="en">
       <Head />
-      <Preview>You're on the Cliparo waitlist!</Preview>
+      <Preview>You're on the Cliparo waitlist — we'll be in touch.</Preview>
       <Body style={styles.body}>
         <Container style={styles.container}>
           <Section style={styles.logoSection}>
-            <Img
-              src={logoUrl}
-              alt="Cliparo"
-              width="48"
-              height="48"
-              style={styles.logo}
-            />
             <Text style={styles.logoText}>Cliparo</Text>
           </Section>
 
-          <Heading style={styles.heading}>You're on the list! 🎉</Heading>
+          <Heading style={styles.heading}>You're on the waitlist.</Heading>
 
           <Text style={styles.text}>
-            Thanks for joining the <strong>Cliparo</strong> waitlist.
+            Thanks for your interest in <strong>Cliparo</strong>.
           </Text>
           <Text style={styles.text}>
-            We're building something special — an AI tool that turns your long videos into
-            viral-ready clips for TikTok, Reels, and Shorts in seconds.
+            We're building an AI tool that turns long-form videos into short clips ready to post on TikTok, Reels, and Shorts — automatically.
           </Text>
           <Text style={styles.text}>
-            We'll reach out as soon as Cliparo is ready for you. You'll be among the first to try it.
+            Early access will be rolled out in waves. We'll reach out as soon as your spot is ready.
           </Text>
 
           <Hr style={styles.hr} />
 
           <Text style={styles.footer}>
-            Cliparo — Turn any video into viral clips.
+            Cliparo — From raw video to ready-to-post clips.
           </Text>
           <Text style={styles.footerMuted}>
-            You received this email because you signed up for the Cliparo waitlist.
+            You received this because you joined the Cliparo waitlist. No further emails until your access is ready.
           </Text>
         </Container>
       </Body>
@@ -79,16 +64,12 @@ const styles = {
     textAlign: "center",
     marginBottom: "24px",
   },
-  logo: {
-    borderRadius: "12px",
-    margin: "0 auto",
-  },
   logoText: {
     fontSize: "18px",
     fontWeight: "800",
     color: "#ffffff",
     textAlign: "center",
-    margin: "8px 0 0",
+    margin: "0",
   },
   heading: {
     fontSize: "24px",
