@@ -102,7 +102,7 @@ export default function CtaSection() {
             {status === "loading" ? (
               <span className="loading loading-spinner loading-sm" />
             ) : status === "success" ? (
-              "You're in! 🎉"
+              "You're on the list"
             ) : (
               <>
                 Get early access
@@ -116,11 +116,11 @@ export default function CtaSection() {
 
         <p className="mt-4 text-xs text-base-content/30">
           {status === "success"
-            ? "Welcome aboard! Check your email for a confirmation from us."
+            ? "Check your inbox — we'll reach out when your access is ready."
             : status === "duplicate"
-              ? "You're already on the list — we'll reach out soon!"
+              ? "This email is already registered. We'll be in touch soon."
               : status === "error"
-                ? "Something went wrong. Please try again."
+                ? "Something went wrong. Please try again in a moment."
                 : "We'll only email you when access is ready. No spam."}
         </p>
       </div>
