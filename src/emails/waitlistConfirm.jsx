@@ -5,12 +5,14 @@ import {
   Container,
   Heading,
   Text,
+  Img,
   Hr,
   Preview,
   Section,
 } from "@react-email/components";
 
 export default function WaitlistConfirmEmail() {
+  const logoUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/icon.png`;
   return (
     <Html lang="en">
       <Head />
@@ -18,6 +20,13 @@ export default function WaitlistConfirmEmail() {
       <Body style={styles.body}>
         <Container style={styles.container}>
           <Section style={styles.logoSection}>
+            <Img
+              src={logoUrl}
+              alt="Cliparo"
+              width="48"
+              height="48"
+              style={styles.logo}
+            />
             <Text style={styles.logoText}>Cliparo</Text>
           </Section>
 
@@ -64,12 +73,16 @@ const styles = {
     textAlign: "center",
     marginBottom: "24px",
   },
+  logo: {
+    borderRadius: "12px",
+    margin: "0 auto",
+  },
   logoText: {
     fontSize: "18px",
     fontWeight: "800",
     color: "#ffffff",
     textAlign: "center",
-    margin: "0",
+    margin: "8px 0 0",
   },
   heading: {
     fontSize: "24px",
